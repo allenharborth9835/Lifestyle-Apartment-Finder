@@ -2,33 +2,37 @@
 let workAddress = "";
 //radius varible
 let radius = 50;
-//income varible
-let income = 0;
 //apartment address varible
 let apartmentAddress = "";
-//distance varible
-let distance = 0;
+let apartmentAmount = 0;
 //mpg varible
 let mpg = 10;
-//other bills array
-let otherBills = {}
+
 
 //function that handles income input
 function incomeHandler(){
-
+    event.preventDefault();
+    if($("#job-address").val() === ""){
+        alert("must put in income and work address")
+    }
+    workAddress = $("#job-address").val();
+    radius = $("#radius").val();
+    console.log(workAddress, income, radius)
+    return;
 }
 //function that handles apartment input
 function apartmentHandler(){
-
+    event.preventDefault();
+    apartmentAddress = $("#apartment-address").val();
+    apartmentAmount = $("#apartment-amount").val();
 }
 //funtion that handles gas bill input
 function gasCostHandler(){
-
+    event.preventDefault();
+    mpg = $("#MPG").val();
+    averagePrice = $("#gas-price").val();
 }
-//function that handles other bills input
-function addBills(){
 
-}
 //function to load bills
 function loadBills(){
     
@@ -38,6 +42,8 @@ function loadBills(){
 function calculate(){
 
 }
+$("#income-input-btn").on("click", incomeHandler)
+
 //function to display apartment listings
 
 //function to display google maps

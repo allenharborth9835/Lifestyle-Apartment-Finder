@@ -5,8 +5,40 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/themes/base/jquery-ui.min.css">
 </head>
 <body>
+    <form>
+        <h2>job address</h2>
+        <input id="job-address" size="30"></input>
+        <h2>radius</h2>
+        <select name="radius" id="radius" selected="20">
+            <option value="20">20</option>
+            <option value="50">50</option>
+            <option value="100">100</option>
+            <option value="300">300</option>
+          </select>
+        <button type="submit" id="income-input-btn">search</button>
+    </form>
+    <form>
+        <h2>apartment address</h2>
+        <input id="apartment-address" size="30"></input>
+        <h2>apartment amount</h2>
+        <input id="apartment-amount" size="30"></input>
+        
+        <button type="submit" id="apartment-input-btn">search</button>
+    </form>
+    <form>
+        <h2>MPG</h2>
+        <input id="MPG" size="30"></input>
+        <h2>Gas Prices</h2>
+        <input id="gas-price" size="30"></input>
+        <button type="submit" id="gas-input-btn">search</button>
+    </form>
+   
     
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+    <script src="assets/js/script.js"></script>
 </body>
 </html>
