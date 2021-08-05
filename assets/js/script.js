@@ -39,7 +39,11 @@ function apartmentHandler(){
 function gasCostHandler(){
     event.preventDefault();
     if($("#MPG").val() === ""||$("#gas-price").val() === ""){
-        alert("must put in apartment address and apartment cost")
+        alert("must put in MPG and gas-price")
+        return;
+    }
+    if(!isNaN($("#MPG").val()) || !isNaN($("#gas-price").val())){
+        alert("MPG and gas-price have to be numbers")
         return;
     }
     mpg = $("#MPG").val();
