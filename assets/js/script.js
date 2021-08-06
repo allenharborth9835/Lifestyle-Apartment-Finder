@@ -41,10 +41,29 @@
     [api-logic] is designed to be modular and adaptive to the needs of the web app [framework-logic], therefore list functions can be used individually as needed, and can be readily modified as needed
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
+//user data object (work latitude/longitude; area code; city; state; address string, chosen apartment latitude/longitude, user provided commute radius, calculated commute distance/time)
+let userData = {
+    //example location coordinate pairs
+    //40.629041,-74.025606; 40.630099,-73.993521; 40.644895,-74.013818; 40.627177, -73.980853
+    workLat: 40.629041,
+    workLng: -74.025606,
+    chosenAptLat: 40.627177,
+    chosenAptLng: -73.980853,
+    chosenCommuteRadius: 0,
+    workAreaCode: 0,
+    workCity: "",
+    workState: "",
+    workAddress: "",
+    commuteDistance: 0,
+    commuteTime: 0
+}
 
-//distance matrix function that accepts two sets of coordinates {latitude, longitude}, then utilizes TrueWay Matrix API to compute distances (in meters) and travel duration times between those two locations
-function distanceMatrix(/*startCoordinateLat, startCoordinateLng, endCoordinateLat, endCoordinateLng*/){
-    fetch("https://trueway-matrix.p.rapidapi.com/CalculateDrivingMatrix?origins=40.629041%2C-74.025606%3B40.630099%2C-73.993521%3B40.644895%2C-74.013818%3B40.627177%2C-73.980853&destinations=40.629041%2C-74.025606%3B40.630099%2C-73.993521%3B40.644895%2C-74.013818%3B40.627177%2C-73.980853", {
+//distance matrix function that accepts two sets of coordinates {latitude, longitude}, then utilizes TrueWay Matrix API to compute distances (in meters) and travel duration times between those two locations (assuming user is driving a car)
+function distanceMatrix(userGeoData){
+
+    let meterToMile = 1609.34;
+     
+    fetch(`https://trueway-matrix.p.rapidapi.com/CalculateDrivingMatrix?origins=${userGeoData.workLat}%2C${userGeoData.workLng}&destinations=${userGeoData.chosenAptLat}%2C${userGeoData.chosenAptLng}`, {
 	"method": "GET",
 	"headers": {
 		"x-rapidapi-key": "1b3e17da97msh8784bd378de9d66p17b153jsn255eb2ee1914",
@@ -53,14 +72,19 @@ function distanceMatrix(/*startCoordinateLat, startCoordinateLng, endCoordinateL
     })
     .then(function(response){
 	return response.json();
+
     })
     .then(function(data){
-    console.log(data);
+        console.log(data);
+        //for one location coordinate pair {lat, lng}, response is in the form of a 2D array ("distances" in meters or "durations" in seconds) with distance value at position [0][0]
+        userGeoData.commuteDistance = data.distances[0][0];
+        userGeoData.commuteTime = data.durations[0][0];
+        console.log("The user commute distance(miles) is: " + Math.round((userGeoData.commuteDistance / meterToMile)));
+        console.log("The user commute time(minutes) is: " + Math.round(userGeoData.commuteTime / 60 ));
     })
     .catch(err => {
 	console.error(err);
     });
-
 }
 
 //function that accepts an address string, then uses the TrueWay Geocoding API to convert the address string into map coordinates {latitude, longitude}
@@ -132,12 +156,12 @@ function searchListings(/*areaCode, stateCode, city, searchRadius*/){
 //insert "Map Tile" API code here if there is time to integrate it into the MVP
 
 
-/*----------------Uncommment to Test APIs------------------------------------
-//distanceMatrix();
+/*----------------Uncommment to Test APIs------------------------------------*/
+distanceMatrix(userData);
 //Geocode();
 //reverseGeocode();
 //searchListings();
----------------------------------------------------------------------------*/
+
 
 //accepts user work address string and chosen apartment listing coordinates {lat, lng}
 function calcCommute(/*userWorkAddress, listingLat, listingLng*/){
