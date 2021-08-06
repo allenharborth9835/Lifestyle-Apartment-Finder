@@ -13,17 +13,18 @@
         <input id="job-address" size="30"></input>
         <h2>radius in miles</h2>
         <select name="radius" id="radius" selected="20">
+            <option value="1">1</option>
+            <option value="5">5</option>
             <option value="20">20</option>
             <option value="50">50</option>
             <option value="100">100</option>
-            <option value="250">250</option>
           </select>
         <button type="submit" id="income-input-btn">search</button>
     </form>
     <form>
         <h2>apartment address</h2>
         <input id="apartment-address" size="30"></input>
-        <h2>apartment amount</h2>
+        <h2>apartment cost</h2>
         <input id="apartment-amount" size="30"></input>
         
         <button type="submit" id="apartment-input-btn">search</button>
@@ -35,7 +36,18 @@
         <input id="gas-price" size="30"></input>
         <button type="submit" id="gas-input-btn">search</button>
     </form>
-   
+    <div id="apartment-search">
+
+    </div>
+    <div id="apartment-pick">
+
+    </div>
+    <div id="gas-bill">
+
+    </div>
+    <div id="total-cost">
+
+    </div>
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
