@@ -41,14 +41,30 @@
     [api-logic] is designed to be modular and adaptive to the needs of the web app [framework-logic], therefore list functions can be used individually as needed, and can be readily modified as needed
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
+/*-------------Test Data----------------------------------------------------*/
+//example location coordinate pairs
+//target work location coordinate pair: 40.74334317912754, -74.00767199382838
+//example work address:  85 10th Ave, New York, NY 10011
+//target Apt address coordinate pair: 41.30731428096317, -72.93124268296455
+
+
+//example Apt address: 274 Crown St, New Haven, CT 06511
+//274%20Crown%20St%2C%20New%20Haven%2C%20CT%2006511 (expected from rapid api "code snippet")
+//274%20Crown%20St%2C%20New%20Haven%2C%20CT%2006511 (addressToFetchParama: result)
+//274  %20   Crown  %20  St  %2C%20  New  %20  Haven  %2C%20  CT  %20   06511
+// %20 = space
+// %2C = ","
+
+const addressExample = "274 Crown St, New Haven, CT 06511";
+/*-------------------------------------------------------------------------*/
+
+
 //user data object (work latitude/longitude; area code; city; state; address string, chosen apartment latitude/longitude, user provided commute radius, calculated commute distance/time)
-let userData = {
-    //example location coordinate pairs
-    //40.629041,-74.025606; 40.630099,-73.993521; 40.644895,-74.013818; 40.627177, -73.980853
-    workLat: 40.629041,
-    workLng: -74.025606,
-    chosenAptLat: 40.627177,
-    chosenAptLng: -73.980853,
+const userData = {
+    workLat: 0,
+    workLng: 0,
+    chosenAptLat: 0,
+    chosenAptLng: 0,
     chosenCommuteRadius: 0,
     workAreaCode: 0,
     workCity: "",
@@ -58,12 +74,32 @@ let userData = {
     commuteTime: 0
 }
 
-//distance matrix function that accepts two sets of coordinates {latitude, longitude}, then utilizes TrueWay Matrix API to compute distances (in meters) and travel duration times between those two locations (assuming user is driving a car)
-function distanceMatrix(userGeoData){
+//convert an address srting to a fetch query parameter for geoCode()
+function addressToFetchQueryParam(addressString){
+    // use String.prototype.replace() method
 
-    let meterToMile = 1609.34;
+    //note that there is a need for address input validation, and that can be handled here or in the [framework-logic]
+
+    console.log(addressString);
+
+    const newaddressString1 = addressString.replace(/,/g,'%2C');
+
+    console.log(newaddressString1);
+
+    const newaddressString2 = newaddressString1.replace(/\s/g,'%20');
+
+    console.log(newaddressString2);
+
+    return newaddressString2;
+
+}
+
+//distance matrix function that accepts two sets of coordinates {latitude, longitude}, then utilizes TrueWay Matrix API to compute distances (in meters) and travel duration times between those two locations (assuming user is driving a car)
+function distanceMatrix(userDataObject){
+
+    const meterToMile = 1609.34;
      
-    fetch(`https://trueway-matrix.p.rapidapi.com/CalculateDrivingMatrix?origins=${userGeoData.workLat}%2C${userGeoData.workLng}&destinations=${userGeoData.chosenAptLat}%2C${userGeoData.chosenAptLng}`, {
+    fetch(`https://trueway-matrix.p.rapidapi.com/CalculateDrivingMatrix?origins=${userDataObject.workLat}%2C${userDataObject.workLng}&destinations=${userDataObject.chosenAptLat}%2C${userDataObject.chosenAptLng}`, {
 	"method": "GET",
 	"headers": {
 		"x-rapidapi-key": "1b3e17da97msh8784bd378de9d66p17b153jsn255eb2ee1914",
@@ -77,8 +113,8 @@ function distanceMatrix(userGeoData){
     .then(function(data){
         console.log(data);
         //for one location coordinate pair {lat, lng}, response is in the form of a 2D array ("distances" in meters or "durations" in seconds) with distance value at position [0][0]
-        userGeoData.commuteDistance = data.distances[0][0];
-        userGeoData.commuteTime = data.durations[0][0];
+        userDataObject.commuteDistance = data.distances[0][0];
+        userDataObject.commuteTime = data.durations[0][0];
         console.log("The user commute distance(miles) is: " + Math.round((userGeoData.commuteDistance / meterToMile)));
         console.log("The user commute time(minutes) is: " + Math.round(userGeoData.commuteTime / 60 ));
     })
@@ -88,19 +124,28 @@ function distanceMatrix(userGeoData){
 }
 
 //function that accepts an address string, then uses the TrueWay Geocoding API to convert the address string into map coordinates {latitude, longitude}
-function geoCode(/*addressToConvert*/){
-    fetch("https://trueway-geocoding.p.rapidapi.com/Geocode?address=505%20Howard%20St%2C%20San%20Francisco&language=en", {
+function geoCode(addressToConvert){
+
+    //place a function here to parse address string and convert it to query format
+    convertedQueryParamAddress = addressToFetchQueryParam(addressToConvert);
+
+    fetch(`https://trueway-geocoding.p.rapidapi.com/Geocode?address=${convertedQueryParamAddress}&language=en`, {
 	"method": "GET",
 	"headers": {
 		"x-rapidapi-key": "1b3e17da97msh8784bd378de9d66p17b153jsn255eb2ee1914",
 		"x-rapidapi-host": "trueway-geocoding.p.rapidapi.com"
 	    }
     })
+
+    //add in loading txt into the html element
+
     .then(function(response){
 	return response.json();
     })
     .then(function(data){
     console.log(data);
+    console.log(data.results[0].location);
+
     })
     .catch(err => {
 	console.error(err);
@@ -116,6 +161,9 @@ function reverseGeocode(/*coordinatelat, coordinateLng*/){
 		"x-rapidapi-host": "trueway-geocoding.p.rapidapi.com"
 	    }
     })
+
+    //add in loading txt into the HTML element
+
     .then(function(response){
 	return response.json();
     })
@@ -153,17 +201,25 @@ function searchListings(/*areaCode, stateCode, city, searchRadius*/){
     });
 }
 
-//insert "Map Tile" API code here if there is time to integrate it into the MVP
-
-
-/*----------------Uncommment to Test APIs------------------------------------*/
-distanceMatrix(userData);
-//Geocode();
-//reverseGeocode();
-//searchListings();
-
-
 //accepts user work address string and chosen apartment listing coordinates {lat, lng}
 function calcCommute(/*userWorkAddress, listingLat, listingLng*/){
 
 }
+
+
+//insert "Map Tile" API code here if there is time to integrate it into the MVP
+
+
+/*----------------Uncommment to Test APIs------------------------------------*/
+//distanceMatrix(userData);
+geoCode(addressExample);
+//console.log(locationObject);
+//reverseGeocode();
+//searchListings();
+//addressToFetchQueryParam(addressExample);
+/*---------------------------------------------------------------------------*/
+
+
+
+
+
