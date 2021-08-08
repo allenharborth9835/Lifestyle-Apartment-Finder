@@ -37,34 +37,34 @@
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
 /*-------------Test Data----------------------------------------------------*/
-//example location coordinate pairs
+//example location coordinate pairs:
 //target work location coordinate pair: 40.74334317912754, -74.00767199382838
 //example work address:  85 10th Ave, New York, NY 10011
+
 //target Apt address coordinate pair: 41.30731428096317, -72.93124268296455
-
-
 //example Apt address: 274 Crown St, New Haven, CT 06511
+
+//fetch-query string conversion notes:
 //274%20Crown%20St%2C%20New%20Haven%2C%20CT%2006511 (expected from rapid api "code snippet")
 //274%20Crown%20St%2C%20New%20Haven%2C%20CT%2006511 (addressToFetchParama: result)
-//274  %20   Crown  %20  St  %2C%20  New  %20  Haven  %2C%20  CT  %20   06511
+//274  %20   Crown  %20  St  %2C%20  New  %20  Haven  %2C%20  CT  %20   06511 (query interpretation)
 // %20 = space
 // %2C = ","
-
-const addressExample = "274 Crown St, New Haven, CT 06511";
 /*-------------------------------------------------------------------------*/
 
 
 //user data object (work latitude/longitude; area code; city; state; address string, chosen apartment latitude/longitude, user provided commute radius, calculated commute distance/time)
 const userData = {
-    workLat: 0,
-    workLng: 0,
-    chosenAptLat: 0,
-    chosenAptLng: 0,
+    workLat: 40.74334317912754,
+    workLng: -74.00767199382838,
+    chosenAptLat: 41.30731428096317,
+    chosenAptLng: -72.93124268296455,
     chosenCommuteRadius: 0,
     workAreaCode: 0,
     workCity: "",
     workState: "",
     workAddress: "",
+    aptAddress: "274 Crown St, New Haven, CT 06511",
     commuteDistance: 0,
     commuteTime: 0
 }
@@ -90,13 +90,13 @@ function addressToFetchQueryParam(addressString){
 }
 
 //distance matrix function that accepts two sets of coordinates {latitude, longitude}, then utilizes TrueWay Matrix API to compute distances (in meters) and travel duration times between those two locations (assuming user is driving a car)
-function distanceMatrix(userDataObject){
+async function distanceMatrix(userDataObject){
 
     const meterToMile = 1609.34;
 
     //add in txt into the html element while loading
 
-    fetch(`https://trueway-matrix.p.rapidapi.com/CalculateDrivingMatrix?origins=${userDataObject.workLat}%2C${userDataObject.workLng}&destinations=${userDataObject.chosenAptLat}%2C${userDataObject.chosenAptLng}`, {
+    const fetchResult = await fetch(`https://trueway-matrix.p.rapidapi.com/CalculateDrivingMatrix?origins=${userDataObject.workLat}%2C${userDataObject.workLng}&destinations=${userDataObject.chosenAptLat}%2C${userDataObject.chosenAptLng}`, {
 	"method": "GET",
 	"headers": {
 		"x-rapidapi-key": "1b3e17da97msh8784bd378de9d66p17b153jsn255eb2ee1914",
@@ -109,14 +109,19 @@ function distanceMatrix(userDataObject){
     .then(function(data){
         console.log(data);
         //for one location coordinate pair {lat, lng}, response is in the form of a 2D array ("distances" in meters or "durations" in seconds) with distance value at position [0][0]
-        userDataObject.commuteDistance = data.distances[0][0];
-        userDataObject.commuteTime = data.durations[0][0];
-        console.log("The user commute distance(miles) is: " + Math.round((userGeoData.commuteDistance / meterToMile)));
-        console.log("The user commute time(minutes) is: " + Math.round(userGeoData.commuteTime / 60 ));
+        let commuteObj = {};
+        commuteObj.commuteDistance = Math.round((data.distances[0][0])/ meterToMile);
+        commuteObj.commuteTime = Math.round((data.durations[0][0])/ 60);
+        console.log("The user commute distance(miles) is: " + commuteObj.commuteDistance);
+        console.log("The user commute time(minutes) is: " + commuteObj.commuteTime);
+        return commuteObj;
     })
     .catch(err => {
 	console.error(err);
     });
+    
+    console.log(fetchResult);
+    return fetchResult;
 }
 
 //function that accepts an address string, then uses the TrueWay Geocoding API to convert the address string into map coordinates {latitude, longitude}
@@ -180,13 +185,21 @@ function searchListings(areaCode, stateCode, city, searchRadius){
 
 /*----------------Uncommment to Test APIs------------------------------------*/
 //distanceMatrix(userData);
-
-//geoCode(addressExample)
-geoCode(addressExample).then(function(data){
-    console.log(data.lat);
+distanceMatrix(userData).then(function(data){
+    console.log(data);
     var divEl = document.querySelector("#target");
     var newParahEl = document.createElement("p");
-    newParahEl.innerHTML = "The address latitude is: " + data.lat;
+    newParahEl.innerHTML = "The user commute distance between work and home is " + data.commuteDistance + " miles" + ", with a estimated travel time of " + data.commuteTime/60 + "hr";
+    divEl.appendChild(newParahEl);
+});
+
+//geoCode(addressExample)
+
+geoCode(userData.aptAddress).then(function(data){
+    console.log(data);
+    var divEl = document.querySelector("#target");
+    var newParahEl = document.createElement("p");
+    newParahEl.innerHTML = "The apartment address (" + userData.aptAddress + ")"+ " latitude/longitude pair is: " + data.lat + "/" + data.lng;
     divEl.appendChild(newParahEl);
 });
 
