@@ -16,17 +16,12 @@
     Functions/arguments:
     1) distanceMatrix(startCoordinateLat, startCoordinateLng, endCoordinateLat, endCoordinateLng)
     2) geoCode(addressToConvert)
-    3) reverseGeocode(coordinatelat, coordinateLng)
-    4) searchListings(areaCode, stateCode, city, searchRadius)
-    5) calcCommute(userWorkAddress, listingLat, listingLng)
-    6) (optional)calcGasBill()
+    3) searchListings(areaCode, stateCode, city, searchRadius)
 
     API(s):
     1) TrueWay Matrix API
     2) TrueWay Geocoding API (geocoding)
-    3) TrueWay Geocoding API (reverse geocoding)
-    4) Reality in US API
-    6) (optional) gas price API for calculation of user's estimated monthly gas bill (commute to and from work)
+    3) Reality in US API (apartment listings)
 
     Pseudocode/use statement:
     1) In [framework-logic], prompt user for work address + desired radius (in miles) for apartment listing search (retrieve address string + radius integer)
@@ -98,7 +93,9 @@ function addressToFetchQueryParam(addressString){
 function distanceMatrix(userDataObject){
 
     const meterToMile = 1609.34;
-     
+
+    //add in txt into the html element while loading
+
     fetch(`https://trueway-matrix.p.rapidapi.com/CalculateDrivingMatrix?origins=${userDataObject.workLat}%2C${userDataObject.workLng}&destinations=${userDataObject.chosenAptLat}%2C${userDataObject.chosenAptLng}`, {
 	"method": "GET",
 	"headers": {
@@ -108,7 +105,6 @@ function distanceMatrix(userDataObject){
     })
     .then(function(response){
 	return response.json();
-
     })
     .then(function(data){
         console.log(data);
@@ -124,62 +120,41 @@ function distanceMatrix(userDataObject){
 }
 
 //function that accepts an address string, then uses the TrueWay Geocoding API to convert the address string into map coordinates {latitude, longitude}
-function geoCode(addressToConvert){
-
+async function geoCode(addressToConvert){
+  
     //place a function here to parse address string and convert it to query format
     convertedQueryParamAddress = addressToFetchQueryParam(addressToConvert);
-
-    fetch(`https://trueway-geocoding.p.rapidapi.com/Geocode?address=${convertedQueryParamAddress}&language=en`, {
+    
+    const fetchResult = await fetch(`https://trueway-geocoding.p.rapidapi.com/Geocode?address=${convertedQueryParamAddress}&language=en`, {
 	"method": "GET",
 	"headers": {
 		"x-rapidapi-key": "1b3e17da97msh8784bd378de9d66p17b153jsn255eb2ee1914",
 		"x-rapidapi-host": "trueway-geocoding.p.rapidapi.com"
 	    }
     })
-
-    //add in loading txt into the html element
-
     .then(function(response){
 	return response.json();
     })
     .then(function(data){
     console.log(data);
+    //isolate location coordinates as an object
     console.log(data.results[0].location);
-
+    return data.results[0].location;
     })
     .catch(err => {
-	console.error(err);
-    });
-}
+    console.error(err);
+     });
 
-//function that accepts map coordinates {latitude, longitude}, then uses the TrueWay Geocoding API to convert the map coordinates into and address string
-function reverseGeocode(/*coordinatelat, coordinateLng*/){
-    fetch("https://trueway-geocoding.p.rapidapi.com/ReverseGeocode?location=37.7879493%2C-122.3961974&language=en", {
-	"method": "GET",
-	"headers": {
-		"x-rapidapi-key": "1b3e17da97msh8784bd378de9d66p17b153jsn255eb2ee1914",
-		"x-rapidapi-host": "trueway-geocoding.p.rapidapi.com"
-	    }
-    })
+    console.log(fetchResult);
+    return fetchResult;
 
-    //add in loading txt into the HTML element
-
-    .then(function(response){
-	return response.json();
-    })
-    .then(function(data){
-    console.log(data);
-
-    //example data for eventual function return statement
-    console.log(data.results[0].address);
-    })
-    .catch(err => {
-	console.error(err);
-    });
 }
 
 //function that accepts an area code, state, city, search radius, and number of desired listings to return from Reality in us API
-function searchListings(/*areaCode, stateCode, city, searchRadius*/){
+function searchListings(areaCode, stateCode, city, searchRadius){
+
+    //add in text to the html element while loading
+
     //note that we only have 500 API calls per month with this API (hard limit)
     fetch("https://realty-in-us.p.rapidapi.com/properties/list-for-rent?state_code=TX&city=Austin&limit=50&offset=0&sort=relevance&radius=25", {
 	"method": "GET",
@@ -201,20 +176,20 @@ function searchListings(/*areaCode, stateCode, city, searchRadius*/){
     });
 }
 
-//accepts user work address string and chosen apartment listing coordinates {lat, lng}
-function calcCommute(/*userWorkAddress, listingLat, listingLng*/){
-
-}
-
-
-//insert "Map Tile" API code here if there is time to integrate it into the MVP
 
 
 /*----------------Uncommment to Test APIs------------------------------------*/
 //distanceMatrix(userData);
-geoCode(addressExample);
-//console.log(locationObject);
-//reverseGeocode();
+
+//geoCode(addressExample)
+geoCode(addressExample).then(function(data){
+    console.log(data.lat);
+    var divEl = document.querySelector("#target");
+    var newParahEl = document.createElement("p");
+    newParahEl.innerHTML = "The address latitude is: " + data.lat;
+    divEl.appendChild(newParahEl);
+});
+
 //searchListings();
 //addressToFetchQueryParam(addressExample);
 /*---------------------------------------------------------------------------*/
