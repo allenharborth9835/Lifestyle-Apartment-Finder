@@ -1,2 +1,17 @@
+Header{
+    margin: 0%;
+    padding: 0px;
+    text-align: center;
+}
 
+p{
+    padding: 20px;
+}
+
+aside{
+    width: 30%;
+padding-left: 15px;
+margin-left: 15px;
+float: left;
+}
 
