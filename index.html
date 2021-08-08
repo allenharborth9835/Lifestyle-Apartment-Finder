@@ -18,15 +18,78 @@
 
     <div id="modal1" class="modal">
         <div class="modal-content">
-            <h4>job address</h4>
-            <input id="job-address" size="10" class="browser-default" ></input>
+            <h4>job  street address</h4>
+            <input id="job-street-address" size="10" class="browser-default" ></input>
+            <h4>job city</h4>
+            <input id="job-city" size="10" class="browser-default" ></input>
             <div class="row">
-            <h4>radius in miles</h4>
+                <h4>job state</h4>
+                <select id="job-state" selected="20" class = "browser-default">
+                    <option value="AL">AL</option>
+                    <option value="AK">AK</option>
+                    <option value="AZ">AZ</option>
+                    <option value="AR">AR</option>
+                    <option value="CA">CA</option>
+                    <option value="CO">CO</option>
+                    <option value="CT">CT</option>
+                    <option value="DE">DE</option>
+                    <option value="DC">DC</option>
+                    <option value="FL">FL</option>
+                    <option value="GA">GA</option>
+                    <option value="HI">HI</option>
+                    <option value="ID">ID</option>
+                    <option value="IL">IL</option>
+                    <option value="IN">IN</option>
+                    <option value="IA">IA</option>
+                    <option value="KS">KS</option>
+                    <option value="KY">KY</option>
+                    <option value="LA">LA</option>
+                    <option value="ME">ME</option>
+                    <option value="MD">MD</option>
+                    <option value="MA">MA</option>
+                    <option value="MI">MI</option>
+                    <option value="MN">MN</option>
+                    <option value="MS">MS</option>
+                    <option value="MO">MO</option>
+                    <option value="MT">MT</option>
+                    <option value="NE">NE</option>
+                    <option value="NV">NV</option>
+                    <option value="NH">NH</option>
+                    <option value="NJ">NJ</option>
+                    <option value="NM">NM</option>
+                    <option value="NY">NY</option>
+                    <option value="NC">NC</option>
+                    <option value="ND">ND</option>
+                    <option value="OH">OH</option>
+                    <option value="OK">OK</option>
+                    <option value="OR">OR</option>
+                    <option value="PA">PA</option>
+                    <option value="RI">RI</option>
+                    <option value="SC">SC</option>
+                    <option value="SD">SD</option>
+                    <option value="TN">TN</option>
+                    <option value="TX">TX</option>
+                    <option value="UT">UT</option>
+                    <option value="VT">VT</option>
+                    <option value="VA">VA</option>
+                    <option value="WA">WA</option>
+                    <option value="WV">WV</option>
+                    <option value="WI">WI</option>
+                    <option value="WY">WY</option>
+                    <option value="AS">AS(American Somoa)</option>
+                    <option value="GU">GU(Guam)</option>
+                    <option value="MP">MP(Northern Mariana Islands)</option>
+                    <option value="PR">PR(Puerto Rico)</option>
+                    <option value="VI">VI(US Virgin Islands)</option>
+                </select>
+            </div>
+            <div class="row">
+                <h4>radius in miles</h4>
                 <select id="radius" selected="20" class = "browser-default">
                     <option value="1">1</option>
                     <option value="5">5</option>
                     <option value="20">20</option>
-                    <option value="50">50</option>
+                    option value="50">50</option>
                     <option value="100">100</option>
                 </select>
             </div>
@@ -40,15 +103,13 @@
 
     <a id="apartment-adress-input"
         class="waves-effect waves-light btn modal-trigger"
-        href="#modal2">pick an apartment
+        href="#modal2">pick an apartment from the list of choices using its number in the listing
     </a>
 
     <div id="modal2" class="modal">
         <div class="modal-content">
-            <h4>apartment address</h4>
-            <input id="apartment-address" size="10"></input>
-            <h4>apartment cost</h4>
-            <input id="apartment-amount" size="10"></input>
+            <h4>pick an apartment from the list using its number</h4>
+            <input id="apartment-choice" size="10"></input>
         </div>
         <div  class="modal-footer">
             <a href="#!" class="model-action modal-close waves-effect waves-green btn-flat"
