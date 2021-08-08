@@ -170,7 +170,7 @@ async function searchListings(userDataObj){
 
     console.log(queryStringCityName);
 
-    const searchResponseLimit = 20;
+    const searchResponseLimit = 200;
     
     //note that we only have 500 API calls per month with this API (hard limit)
     const fetchResultList = await fetch(`https://realty-in-us.p.rapidapi.com/properties/list-for-rent?state_code=${userDataObj.workState}&city=${queryStringCityName}&limit=${searchResponseLimit}&offset=0&postal_code=${userDataObj.workAreaCode}&sort=relevance&radius=${userDataObj.commuteRadius}`, {
@@ -186,7 +186,7 @@ async function searchListings(userDataObj){
     .then(function(data){
     console.log(data);
 
-    const listingsArray = data.listings
+    let listingsArray = data.listings
 
     //return the array of rental listings
     for(let i = 0; i < listingsArray.length; i++){
@@ -204,9 +204,10 @@ async function searchListings(userDataObj){
     });
 
     console.log(fetchResultList);
+    return fetchResultList;
 }
 
-/*----------------Uncommment to Test APIs------------------------------------*/
+/*----------------Uncommment to Test APIs------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 // async distanceMatrix(() example
 
 /*
@@ -218,8 +219,6 @@ distanceMatrix(userData).then(function(data){
     divEl.appendChild(newParahEl);
 });
 */
-
-
 
 //async geoCode() example
 
@@ -233,24 +232,36 @@ geoCode(userData.aptAddress).then(function(data){
 });
 */
 
-
 // async searchListings() example:
 
-
-searchListings(userData); /*.then(function(data){
+/*
+searchListings(userData).then(function(data){
     console.log(data);
     var divEl = document.querySelector("#target");
-    var newParahEl = document.createElement("p");
-    newParahEl.innerHTML = "The apartment address (" + userData.aptAddress + ")"+ " latitude/longitude pair is: " + data.lat + "/" + data.lng;
-    divEl.appendChild(newParahEl);
-}); */
+    var orderedListEL = document.createElement("ol");
+    divEl.appendChild(orderedListEL);
 
+    for(let i = 0; i < data.length; i++ ){
+        var orderedListItem = document.createElement("li");
+        if(data[i].photo_count > 0){
+            orderedListItem.innerHTML = "<h1>" + data[i].address + "<h1><br>" + "<h2>" + data[i].lat + "/" + data[i].lon + "<h2><br>" + "<img src='" 
+            + data[i].photo + "'style='width:autopx;height:autopx;'>" + "<h3>" + data[i].sqft + ", Beds: " + data[i].beds + ", Baths: " + data[i].baths 
+            + " Monthly Rent:" + data[i].price + "," + data[i].price_raw + "<h3><br>";
+        } else{
+            orderedListItem.innerHTML = "<h1>" + data[i].address + data[i].lat + "/" + data[i].lon + "<h1><br>" + "<img src='" 
+            + "<h2>No Photo to Display<h2>" + "'>" + "<h3>" +  data[i].sqft + ", Beds: " + data[i].beds + ", Baths: " + data[i].baths 
+            + " Monthly Rent:" + data[i].price + "," + data[i].price_raw + "<h3><br>";
+        }
+        orderedListEL.appendChild(orderedListItem);
+    }
+});
+*/
 
 // convert address string to fetch query string example:
 
 //addressToFetchQueryParam(addressExample);
 
-/*---------------------------------------------------------------------------*/
+/*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
 
 
