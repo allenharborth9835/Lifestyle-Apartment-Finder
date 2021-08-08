@@ -1,4 +1,4 @@
-/*--------------------------------------------[api-logic] Pseudocode/input and output/functional structure-----------------------------------------------------------------------------------------------------------------------------------------------------------------
+/*--------------------------------------------[api-logic] Pseudocode/input and output/functional structure------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
     [framework-logic] will collect and validate user input values relavent to the API code logic [api-logic] presented below...
 
@@ -17,6 +17,7 @@
     1) distanceMatrix(startCoordinateLat, startCoordinateLng, endCoordinateLat, endCoordinateLng)
     2) geoCode(addressToConvert)
     3) searchListings(areaCode, stateCode, city, searchRadius)
+    4) addressToFetchQueryParam()
 
     API(s):
     1) TrueWay Matrix API
@@ -34,9 +35,9 @@
 
     Use Statement:
     [api-logic] is designed to be modular and adaptive to the needs of the web app [framework-logic], therefore list functions can be used individually as needed, and can be readily modified as needed
----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
-/*-------------Test Data----------------------------------------------------*/
+/*-------------Test Data--------------------------------------------------------------------------------*/
 //example location coordinate pairs:
 //target work location coordinate pair: 40.74334317912754, -74.00767199382838
 //example work address:  85 10th Ave, New York, NY 10011
@@ -44,29 +45,30 @@
 //target Apt address coordinate pair: 41.30731428096317, -72.93124268296455
 //example Apt address: 274 Crown St, New Haven, CT 06511
 
-//fetch-query string conversion notes:
+//fetch-query string conversion notes (see addressToFetchQueryParam() for implementation):
 //274%20Crown%20St%2C%20New%20Haven%2C%20CT%2006511 (expected from rapid api "code snippet")
 //274%20Crown%20St%2C%20New%20Haven%2C%20CT%2006511 (addressToFetchParama: result)
 //274  %20   Crown  %20  St  %2C%20  New  %20  Haven  %2C%20  CT  %20   06511 (query interpretation)
 // %20 = space
 // %2C = ","
-/*-------------------------------------------------------------------------*/
+/*------------------------------------------------------------------------------------------------------*/
 
 
-//user data object (work latitude/longitude; area code; city; state; address string, chosen apartment latitude/longitude, user provided commute radius, calculated commute distance/time)
+//Test user data object (work latitude/longitude; area code; city; state; address string, chosen apartment latitude/longitude, user provided commute radius, calculated commute distance/time)
 const userData = {
+    workAreaCode: 10011,
+    workCity: "New York",
+    workState: "NY",
+    workAddress: "85 10th Ave, New York, NY 10011",
     workLat: 40.74334317912754,
     workLng: -74.00767199382838,
-    chosenAptLat: 41.30731428096317,
-    chosenAptLng: -72.93124268296455,
-    chosenCommuteRadius: 0,
-    workAreaCode: 0,
-    workCity: "",
-    workState: "",
-    workAddress: "",
+    aptAreaCode: 06511,
+    aptCity: "New Haven",
+    aptState: "CT",
+    aptLat: 41.30731428096317,
+    aptLng: -72.93124268296455,
     aptAddress: "274 Crown St, New Haven, CT 06511",
-    commuteDistance: 0,
-    commuteTime: 0
+    commuteRadius: 20
 }
 
 //convert an address srting to a fetch query parameter for geoCode()
@@ -90,13 +92,12 @@ function addressToFetchQueryParam(addressString){
 }
 
 //distance matrix function that accepts two sets of coordinates {latitude, longitude}, then utilizes TrueWay Matrix API to compute distances (in meters) and travel duration times between those two locations (assuming user is driving a car)
-async function distanceMatrix(userDataObject){
+async function distanceMatrix(userDataObj){
 
+    //conversion factor = # of meters/mile
     const meterToMile = 1609.34;
 
-    //add in txt into the html element while loading
-
-    const fetchResult = await fetch(`https://trueway-matrix.p.rapidapi.com/CalculateDrivingMatrix?origins=${userDataObject.workLat}%2C${userDataObject.workLng}&destinations=${userDataObject.chosenAptLat}%2C${userDataObject.chosenAptLng}`, {
+    const fetchResultMatrix = await fetch(`https://trueway-matrix.p.rapidapi.com/CalculateDrivingMatrix?origins=${userDataObj.workLat}%2C${userDataObj.workLng}&destinations=${userDataObj.aptLat}%2C${userDataObj.aptLng}`, {
 	"method": "GET",
 	"headers": {
 		"x-rapidapi-key": "1b3e17da97msh8784bd378de9d66p17b153jsn255eb2ee1914",
@@ -111,17 +112,19 @@ async function distanceMatrix(userDataObject){
         //for one location coordinate pair {lat, lng}, response is in the form of a 2D array ("distances" in meters or "durations" in seconds) with distance value at position [0][0]
         let commuteObj = {};
         commuteObj.commuteDistance = Math.round((data.distances[0][0])/ meterToMile);
-        commuteObj.commuteTime = Math.round((data.durations[0][0])/ 60);
+        commuteObj.commuteTime = Math.round((data.durations[0][0])/60);
         console.log("The user commute distance(miles) is: " + commuteObj.commuteDistance);
         console.log("The user commute time(minutes) is: " + commuteObj.commuteTime);
+
+        //return commuteObj ={commuteDistance: X (miles, to nearest mile), commuteTime: Y (minutes, to nearest minute)}
         return commuteObj;
     })
     .catch(err => {
 	console.error(err);
     });
     
-    console.log(fetchResult);
-    return fetchResult;
+    console.log(fetchResultMatrix);
+    return fetchResultMatrix;
 }
 
 //function that accepts an address string, then uses the TrueWay Geocoding API to convert the address string into map coordinates {latitude, longitude}
@@ -130,7 +133,7 @@ async function geoCode(addressToConvert){
     //place a function here to parse address string and convert it to query format
     convertedQueryParamAddress = addressToFetchQueryParam(addressToConvert);
     
-    const fetchResult = await fetch(`https://trueway-geocoding.p.rapidapi.com/Geocode?address=${convertedQueryParamAddress}&language=en`, {
+    const fetchResultGeo = await fetch(`https://trueway-geocoding.p.rapidapi.com/Geocode?address=${convertedQueryParamAddress}&language=en`, {
 	"method": "GET",
 	"headers": {
 		"x-rapidapi-key": "1b3e17da97msh8784bd378de9d66p17b153jsn255eb2ee1914",
@@ -144,24 +147,33 @@ async function geoCode(addressToConvert){
     console.log(data);
     //isolate location coordinates as an object
     console.log(data.results[0].location);
+
+    //return location coordinates as an object
     return data.results[0].location;
     })
     .catch(err => {
     console.error(err);
      });
 
-    console.log(fetchResult);
-    return fetchResult;
+    console.log(fetchResultGeo);
+    return fetchResultGeo;
 
 }
 
 //function that accepts an area code, state, city, search radius, and number of desired listings to return from Reality in us API
-function searchListings(areaCode, stateCode, city, searchRadius){
+async function searchListings(userDataObj){
 
-    //add in text to the html element while loading
+    console.log(userDataObj.workCity);
 
+    //convert city name into a fetch query string
+    queryStringCityName = addressToFetchQueryParam(userDataObj.workCity);
+
+    console.log(queryStringCityName);
+
+    const searchResponseLimit = 20;
+    
     //note that we only have 500 API calls per month with this API (hard limit)
-    fetch("https://realty-in-us.p.rapidapi.com/properties/list-for-rent?state_code=TX&city=Austin&limit=50&offset=0&sort=relevance&radius=25", {
+    const fetchResultList = await fetch(`https://realty-in-us.p.rapidapi.com/properties/list-for-rent?state_code=${userDataObj.workState}&city=${queryStringCityName}&limit=${searchResponseLimit}&offset=0&postal_code=${userDataObj.workAreaCode}&sort=relevance&radius=${userDataObj.commuteRadius}`, {
 	"method": "GET",
 	"headers": {
 		"x-rapidapi-key": "1b3e17da97msh8784bd378de9d66p17b153jsn255eb2ee1914",
@@ -173,28 +185,45 @@ function searchListings(areaCode, stateCode, city, searchRadius){
     })
     .then(function(data){
     console.log(data);
-    //package relevant listing parameters into a condensed apartmentListings object, which holds an array of listing objects
+
+    const listingsArray = data.listings
+
+    //return the array of rental listings
+    for(let i = 0; i < listingsArray.length; i++){
+        if(listingsArray[i].price_raw === 0){
+            console.log("Listing #: " + (i+1) + " requires " + "Phone " + listingsArray[i].price + " for price quote");
+        }
+    }
+
+    console.log("We have returned " +data.listings.length + " potential listings according to the requested search parameters");
+    return listingsArray;
     
     })
     .catch(err => {
 	console.error(err);
     });
+
+    console.log(fetchResultList);
 }
 
-
-
 /*----------------Uncommment to Test APIs------------------------------------*/
-//distanceMatrix(userData);
+// async distanceMatrix(() example
+
+/*
 distanceMatrix(userData).then(function(data){
     console.log(data);
     var divEl = document.querySelector("#target");
     var newParahEl = document.createElement("p");
-    newParahEl.innerHTML = "The user commute distance between work and home is " + data.commuteDistance + " miles" + ", with a estimated travel time of " + data.commuteTime/60 + "hr";
+    newParahEl.innerHTML = "The user commute distance between work and home is " + data.commuteDistance + " miles" + ", with a estimated travel time of " + Math.round(data.commuteTime/60) + " hr " + Math.round(((data.commuteTime % 60)/60) * 60) + " min";
     divEl.appendChild(newParahEl);
 });
+*/
 
-//geoCode(addressExample)
 
+
+//async geoCode() example
+
+/*
 geoCode(userData.aptAddress).then(function(data){
     console.log(data);
     var divEl = document.querySelector("#target");
@@ -202,9 +231,25 @@ geoCode(userData.aptAddress).then(function(data){
     newParahEl.innerHTML = "The apartment address (" + userData.aptAddress + ")"+ " latitude/longitude pair is: " + data.lat + "/" + data.lng;
     divEl.appendChild(newParahEl);
 });
+*/
 
-//searchListings();
+
+// async searchListings() example:
+
+
+searchListings(userData); /*.then(function(data){
+    console.log(data);
+    var divEl = document.querySelector("#target");
+    var newParahEl = document.createElement("p");
+    newParahEl.innerHTML = "The apartment address (" + userData.aptAddress + ")"+ " latitude/longitude pair is: " + data.lat + "/" + data.lng;
+    divEl.appendChild(newParahEl);
+}); */
+
+
+// convert address string to fetch query string example:
+
 //addressToFetchQueryParam(addressExample);
+
 /*---------------------------------------------------------------------------*/
 
 
