@@ -21,15 +21,24 @@ let budgetTracker = {
     averagePrice: null
 }
 
+$(document).ready(function(){
+    $('select').formSelect();
+  });
+
+$(document).ready(function () {
+    $('.modal').modal();
+});
+
 savedData = localStorage.getItem("budgetTracker");
 if(!(savedData===null)){
-    savedData = JSON.parse(savedData)
+    savedData = JSON.parse(savedData);
     budgetTracker = savedData;
     if(!(savedData.workAddress===null)){
         workAddress = savedData.workAddress;
         radius = savedData.radius;
         console.log(workAddress, radius);
         $("#apartment-search").html(`<h3>searching for apartments within ${radius} of ${workAddress}<h3>`);
+        apartmentSearch();
     }
     if(!(savedData.apartmentAddress===null)){
 
@@ -41,10 +50,16 @@ if(!(savedData===null)){
     if(!(savedData.mpg===null)){
         mpg = savedData.mpg;
         averagePrice = savedData.averagePrice;
-        gasCost = ((((radius/mpg) * averagePrice)*2)*22)
-        console.log(mpg, averagePrice, gasCost)
+        gasCost = ((((radius/mpg) * averagePrice)*2)*22);
+        console.log(mpg, averagePrice, gasCost);
         $("#gas-bill").html(`<h3>the maximum you'll pay for gas is ${parseInt(gasCost)}$ a month<h3>`);
         $("#total-cost").html(`<h3>the average total price of apartment and gas could be as high as ${parseInt(apartmentAmount) + parseInt(gasCost)}$ a month<h3>`);
+    }
+}
+
+function apartmentSearch(){
+    for(let i = 0; i<50;i++){
+        $("#apartment-listings").append(`${i+1}. apartment at  cost  <br>`);
     }
 }
 
@@ -59,7 +74,7 @@ function workHandler(){
     workAddress = $("#job-address").val();
     budgetTracker.workAddress = workAddress;
     radius = $("#radius").val();
-    budgetTracker.radius = radius
+    budgetTracker.radius = radius;
     
     localStorage.setItem("budgetTracker", JSON.stringify(budgetTracker));
     console.log(workAddress, radius);
@@ -70,6 +85,7 @@ function workHandler(){
         $("#gas-bill").html(`<h3>the maximum you'll pay for gas is ${parseInt(gasCost)}$ a month<h3>`);
         $("#total-cost").html(`<h3>the average total price of apartment and gas could be as high as ${parseInt(apartmentAmount) + parseInt(gasCost)}$ a month<h3>`);
     }
+    apartmentSearch();
     return;
 }
 
@@ -113,19 +129,19 @@ function gasCostHandler(){
     budgetTracker.mpg = mpg;
     averagePrice = $("#gas-price").val();
     budgetTracker.averagePrice = averagePrice;
-    gasCost = ((((radius/mpg) * averagePrice)*2)*22) 
+    gasCost = ((((radius/mpg) * averagePrice)*2)*22);
 
     localStorage.setItem("budgetTracker", JSON.stringify(budgetTracker));
-    console.log(mpg, averagePrice,gasCost)
+    console.log(mpg, averagePrice,gasCost);
     $("#gas-bill").html(`<h3>the maximum you'll pay for gas is ${parseInt(gasCost)}$ a month<h3>`);
     $("#total-cost").html(`<h3>the average total price of apartment and gas could be as high as ${parseInt(apartmentAmount) + parseInt(gasCost)}$ a month<h3>`);
     return;
 }
 
 
-$("#income-input-btn").on("click", workHandler)
-$("#apartment-input-btn").on("click", apartmentHandler)
-$("#gas-input-btn").on("click", gasCostHandler)
+$("#work-input-btn").on("click", workHandler);
+$("#apartment-input-btn").on("click", apartmentHandler);
+$("#gas-input-btn").on("click", gasCostHandler);
 //function to display apartment listings
 
 //function to display google maps

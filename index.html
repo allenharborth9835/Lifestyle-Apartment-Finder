@@ -5,37 +5,77 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/themes/base/jquery-ui.min.css">
+    <link rel="stylesheet" href=
+    "https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css">
+    
+    <link rel="stylesheet" href="./assets/css/style.css">
 </head>
-<body>
-    <form>
-        <h2>job address</h2>
-        <input id="job-address" size="30"></input>
-        <h2>radius in miles</h2>
-        <select name="radius" id="radius" selected="20">
-            <option value="1">1</option>
-            <option value="5">5</option>
-            <option value="20">20</option>
-            <option value="50">50</option>
-            <option value="100">100</option>
-          </select>
-        <button type="submit" id="income-input-btn">search</button>
-    </form>
-    <form>
-        <h2>apartment address</h2>
-        <input id="apartment-address" size="30"></input>
-        <h2>apartment cost</h2>
-        <input id="apartment-amount" size="30"></input>
-        
-        <button type="submit" id="apartment-input-btn">search</button>
-    </form>
-    <form>
-        <h2>MPG</h2>
-        <input id="MPG" size="30"></input>
-        <h2>Gas Prices</h2>
-        <input id="gas-price" size="30"></input>
-        <button type="submit" id="gas-input-btn">search</button>
-    </form>
+<body class="container ">
+    <a id="work-adress-input"
+        class="waves-effect waves-light btn modal-trigger"
+        href="#modal1">set up your work address
+    </a>
+
+    <div id="modal1" class="modal">
+        <div class="modal-content">
+            <h4>job address</h4>
+            <input id="job-address" size="10" class="browser-default" ></input>
+            <div class="row">
+            <h4>radius in miles</h4>
+                <select id="radius" selected="20" class = "browser-default">
+                    <option value="1">1</option>
+                    <option value="5">5</option>
+                    <option value="20">20</option>
+                    <option value="50">50</option>
+                    <option value="100">100</option>
+                </select>
+            </div>
+        </div>
+        <div  class="modal-footer">
+            <a href="#!" class="model-action modal-close waves-effect waves-green btn-flat" 
+                id="work-input-btn">search
+            </a>    
+        </div>
+    </div>
+
+    <a id="apartment-adress-input"
+        class="waves-effect waves-light btn modal-trigger"
+        href="#modal2">pick an apartment
+    </a>
+
+    <div id="modal2" class="modal">
+        <div class="modal-content">
+            <h4>apartment address</h4>
+            <input id="apartment-address" size="10"></input>
+            <h4>apartment cost</h4>
+            <input id="apartment-amount" size="10"></input>
+        </div>
+        <div  class="modal-footer">
+            <a href="#!" class="model-action modal-close waves-effect waves-green btn-flat"
+                id="apartment-input-btn">input
+            </a>
+        </div>
+    </div>
+
+    <a id="gas-input"
+        class="waves-effect waves-light btn modal-trigger"
+        href="#modal3">set up your gas usage
+    </a>
+
+    <div id="modal3" class="modal">
+        <div class="modal-content">
+            <h4>MPG</h4>
+            <input id="MPG" size="10"></input>
+            <h4>Gas Prices</h4>
+            <input id="gas-price" size="10"></input>
+        </div>
+        <div  class="modal-footer">
+            <a href="#!" class="model-action modal-close waves-effect waves-green btn-flat"
+                id="gas-input-btn">input
+            </a>
+        </div>
+    </div>
+
     <div id="apartment-search">
 
     </div>
@@ -48,9 +88,12 @@
     <div id="total-cost">
 
     </div>
-    
+    <div id="apartment-listings">
+
+    </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
     <script src="assets/js/script.js"></script>
 </body>
 </html>
