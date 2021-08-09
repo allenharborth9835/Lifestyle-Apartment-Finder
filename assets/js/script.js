@@ -56,6 +56,7 @@ let budgetTracker = {
     averagePrice: null,
     commuteDistance: 0,
     commuteTime: 0,
+    apartmentData:null
 }
 
 //css frame work javascript 
@@ -212,7 +213,7 @@ function workHandler(){
     $("#apartment-search").html(`<p>searching for apartments within ${budgetTracker.radius} of ${budgetTracker.workAddress}<p>`);
     searchListings(budgetTracker).then(function(data){
         console.log(data);
-        apartments = data;
+        budgetTracker.apartmentData = data;
         var divEl = document.querySelector("#apartment-listings");
         var orderedListEL = document.createElement("ul");
         divEl.appendChild(orderedListEL);
@@ -229,6 +230,7 @@ function workHandler(){
             }
             orderedListEL.appendChild(orderedListItem);
         }
+        localStorage.setItem("budgetTracker", JSON.stringify(budgetTracker));
     });
     if(!(budgetTracker.mpg===null)){
         budgetTracker.gasCost = ((((budgetTracker.radius/budgetTracker.mpg) * budgetTracker.averagePrice)*2)*22);
@@ -250,16 +252,14 @@ function apartmentHandler(){
         return;
     }
     apartmentChoice = $("#apartment-choice").val();
-    
-    searchListings(budgetTracker).then(function(data){
-        console.log(data[apartmentChoice-1])
-        budgetTracker.apartmentAddress = data[apartmentChoice-1].address;
-        budgetTracker.apartmentAmount = data[apartmentChoice-1].price_raw;
-        budgetTracker.AptLat = data[apartmentChoice-1].lat;
-        budgetTracker.AptLng = data[apartmentChoice-1].lon;
+
+        console.log(budgetTracker.apartmentData[apartmentChoice-1])
+        budgetTracker.apartmentAddress = budgetTracker.apartmentData[apartmentChoice-1].address;
+        budgetTracker.apartmentAmount = budgetTracker.apartmentData[apartmentChoice-1].price_raw;
+        budgetTracker.AptLat = budgetTracker.apartmentData[apartmentChoice-1].lat;
+        budgetTracker.AptLng = budgetTracker.apartmentData[apartmentChoice-1].lon;
         localStorage.setItem("budgetTracker", JSON.stringify(budgetTracker));
         $("#apartment-pick").html(`<p>you choose ${budgetTracker.apartmentAddress} at ${budgetTracker.apartmentAmount}$<p>`);
-    });
 
     if(!(budgetTracker.mpg===null)){
         $("#total-cost").html(`<p>the average total price of apartment and gas could be as high as ${parseInt(budgetTracker.apartmentAmount) + parseInt(budgetTracker.gasCost)}$ a month<p>`);
@@ -293,26 +293,23 @@ if(!(savedData===null)){
     budgetTracker = savedData;
     if(!(savedData.workAddress===null)){
         $("#apartment-search").html(`<p>searching for apartments within ${budgetTracker.radius} of ${budgetTracker.workAddress}<p>`);
-        searchListings(budgetTracker).then(function(data){
-            console.log(data);
-            apartments = data;
-            var divEl = document.querySelector("#apartment-listings");
-            var orderedListEL = document.createElement("ul");
-            divEl.appendChild(orderedListEL);
-            for(let i = 0; i < data.length; i++ ){
-                var orderedListItem = document.createElement("li");
-                if(data[i].photo_count > 0){
-                    orderedListItem.innerHTML = "<p>" + (i+1)+". " + data[i].address + "<p>" + "<p>" + data[i].lat + "/" + data[i].lon + "<p>" + "<img src='" 
-                    + data[i].photo + "'style='width:autopx;height:autopx;' width='900' height='600'>" + "<p>" + data[i].sqft + ", Beds: " + data[i].beds + ", Baths: " + data[i].baths 
-                    + " Monthly Rent:" + data[i].price + "," + data[i].price_raw + "<p>";
-                } else{
-                    orderedListItem.innerHTML = "<p>" + data[i].address + data[i].lat + "/" + data[i].lon + "<p>" + "<img src='" 
-                    + "<p>No Photo to Display<p>" + "'>" + "<p>" +  data[i].sqft + ", Beds: " + data[i].beds + ", Baths: " + data[i].baths 
-                    + " Monthly Rent:" + data[i].price + "," + data[i].price_raw + "<p>";
-                }
-                orderedListEL.appendChild(orderedListItem);
+        var divEl = document.querySelector("#apartment-listings");
+        var orderedListEL = document.createElement("ul");
+        divEl.appendChild(orderedListEL);
+        for(let i = 0; i < budgetTracker.apartmentData.length; i++ ){
+            var orderedListItem = document.createElement("li");
+            if(budgetTracker.apartmentData[i].photo_count > 0){
+                orderedListItem.innerHTML = "<p>" + (i+1)+". " + budgetTracker.apartmentData[i].address + "<p>" + "<p>" + budgetTracker.apartmentData[i].lat + "/" + budgetTracker.apartmentData[i].lon + "<p>" + "<img src='" 
+                + budgetTracker.apartmentData[i].photo + "'style='width:autopx;height:autopx;' width='900' height='600'>" + "<p>" + budgetTracker.apartmentData[i].sqft + ", Beds: " + budgetTracker.apartmentData[i].beds + ", Baths: " + budgetTracker.apartmentData[i].baths 
+                + " Monthly Rent:" + budgetTracker.apartmentData[i].price + "," + budgetTracker.apartmentData[i].price_raw + "<p>";
+            } else{
+                orderedListItem.innerHTML = "<p>" + budgetTracker.apartmentData[i].address + budgetTracker.apartmentData[i].lat + "/" + budgetTracker.apartmentData[i].lon + "<p>" + "<img src='" 
+                + "<p>No Photo to Display<p>" + "'>" + "<p>" +  budgetTracker.apartmentData[i].sqft + ", Beds: " + budgetTracker.apartmentData[i].beds + ", Baths: " + budgetTracker.apartmentData[i].baths 
+                + " Monthly Rent:" + budgetTracker.apartmentData[i].price + "," + budgetTracker.apartmentData[i].price_raw + "<p>";
             }
-        });
+            orderedListEL.appendChild(orderedListItem);
+        }
+        localStorage.setItem("budgetTracker", JSON.stringify(budgetTracker));
     }
     if(!(savedData.apartmentAddress===null)){
         $("#apartment-pick").html(`<p>you choose ${budgetTracker.apartmentAddress} at ${budgetTracker.apartmentAmount}$<p>`);
