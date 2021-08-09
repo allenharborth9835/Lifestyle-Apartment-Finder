@@ -5,13 +5,23 @@ Header{
 }
 
 p{
-    padding: 20px;
+    padding: 20px !important;
 }
 
 aside{
     width: 30%;
 padding-left: 15px;
 margin-left: 15px;
-float: left;
+border: #f4f4f4 3px solid;
 }
 
+.Slider{
+    padding: 10px
+}
+
+.section-search input{
+padding: 5px !important;
+font-size: 18px !important;
+width: 90% !important;
+border: #f4f4f4 3px solid;
+}
