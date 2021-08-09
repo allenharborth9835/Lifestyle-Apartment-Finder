@@ -36,6 +36,7 @@
 
 //holds the user choice
 let apartmentChoice = 0;
+
 //object to store local storage
 let budgetTracker = {
     workAddress: null,
@@ -49,12 +50,13 @@ let budgetTracker = {
     gasCost: 0,
     workLat: null,
     workLng: null,
-    AptLat: 0,
-    AptLng: 0,
+    AptLat: null,
+    AptLng: null,
     mpg: null,
     averagePrice: null,
     commuteDistance: 0,
-    commuteTime: 0
+    commuteTime: 0,
+    apartments: null
 }
 
 //css frame work javascript 
@@ -232,9 +234,14 @@ function workHandler(){
                 + "<p>No Photo to Display<h3>" + "'>" + "<p>" +  data[i].sqft + ", Beds: " + data[i].beds + ", Baths: " + data[i].baths 
                 + " Monthly Rent:" + data[i].price + "," + data[i].price_raw + "<p>";
             }
-            orderedListEL.appendChild(orderedListItem);
+            budgetTracker.apartments[i].apartmentAddress = data[i].address;
+            budgetTracker.apartments[i].apartmentAmount = data[i].price_raw;
+            budgetTracker.apartments[i].AptLat = data[i].lat;
+            budgetTracker.apartments[i].AptLng = data[i].lon;
+            budgetTracker.orderedListEL.appendChild(orderedListItem);
         }
     });
+    console.log(budgetTracker.apartments);
     return;
 }
 
@@ -288,6 +295,7 @@ if(!(savedData===null)){
         $("#apartment-search").html(`<p>searching for apartments within ${budgetTracker.radius} of ${budgetTracker.workAddress}<p>`);
         searchListings(budgetTracker).then(function(data){
             console.log(data);
+            apartments = data;
             var divEl = document.querySelector("#apartment-listings");
             var orderedListEL = document.createElement("ul");
             divEl.appendChild(orderedListEL);
@@ -302,9 +310,14 @@ if(!(savedData===null)){
                     + "<p>No Photo to Display<h3>" + "'>" + "<p>" +  data[i].sqft + ", Beds: " + data[i].beds + ", Baths: " + data[i].baths 
                     + " Monthly Rent:" + data[i].price + "," + data[i].price_raw + "<p>";
                 }
-                orderedListEL.appendChild(orderedListItem);
+                budgetTracker.apartments[i].apartmentAddress = data[i].address;
+                budgetTracker.apartments[i].apartmentAmount = data[i].price_raw;
+                budgetTracker.apartments[i].AptLat = data[i].lat;
+                budgetTracker.apartments[i].AptLng = data[i].lon;
+                budgetTracker.orderedListEL.appendChild(orderedListItem);
             }
         });
+        console.log(budgetTracker.apartments);
     }
     if(!(savedData.apartmentAddress===null)){
         $("#apartment-pick").html(`<p>you choose ${budgetTracker.apartmentAddress} at ${budgetTracker.apartmentAmount}$<p>`);
