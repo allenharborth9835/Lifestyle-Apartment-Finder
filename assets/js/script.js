@@ -83,17 +83,17 @@ function addressToFetchQueryParam(addressString){
 }
 
 //distance matrix function that accepts two sets of coordinates {latitude, longitude}, then utilizes TrueWay Matrix API to compute distances (in meters) and travel duration times between those two locations (assuming user is driving a car)
-async function distanceMatrix(userDataObj){
+async function distanceMatrix(budgetTracker){
 
-    const fetchResultMatrix = await fetch(`https://trueway-matrix.p.rapidapi.com/CalculateDrivingMatrix?origins=${userDataObj.workLat}%2C${userDataObj.workLng}&destinations=${userDataObj.aptLat}%2C${userDataObj.aptLng}`, {
+    const fetchResultMatrix = await fetch(`https://trueway-matrix.p.rapidapi.com/CalculateDrivingMatrix?origins=${budgetTracker.workLat}%2C${budgetTracker.workLng}&destinations=${budgetTracker.aptLat}%2C${budgetTracker.aptLng}`, {
 	"method": "GET",
 	"headers": {
-		"x-rapidapi-key": "1b3e17da97msh8784bd378de9d66p17b153jsn255eb2ee1914",
-		"x-rapidapi-host": "trueway-matrix.p.rapidapi.com"
-	    }
+		'x-rapidapi-key': '7536dee8b5msh03cc5ee840cda5bp11f4bdjsna6622adb57df',
+        'x-rapidapi-host': 'trueway-matrix.p.rapidapi.com'
+	}
     })
     .then(function(response){
-	return response.json();
+	    return response.json();
     })
     .then(function(data){
         console.log(data);
@@ -136,18 +136,18 @@ async function geoCode(addressToConvert){
 	    return response.json();
     })
     .then(function(data){
-    console.log(data);
-    //isolate location coordinates as an object
-    console.log(data.results[0].location);
+        console.log(data);
+        //isolate location coordinates as an object
+        console.log(data.results[0].location);
     
-    //return location coordinates as an object
-    return data.results[0].location;
+        //return location coordinates as an object
+        return data.results[0].location;
     })
     .catch(err => {
-	console.error(err);
+	    console.error(err);
     });
     console.log(fetchResultGeo)
-    return fetchResultGeo;
+        return fetchResultGeo;
 
 }
 
@@ -191,7 +191,7 @@ async function searchListings(budgetTracker){
     
     })
     .catch(err => {
-	console.error(err);
+	    console.error(err);
     });
 
     console.log(fetchResultList);
