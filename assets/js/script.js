@@ -83,35 +83,35 @@ function addressToFetchQueryParam(addressString){
 }
 
 //distance matrix function that accepts two sets of coordinates {latitude, longitude}, then utilizes TrueWay Matrix API to compute distances (in meters) and travel duration times between those two locations (assuming user is driving a car)
-async function distanceMatrix(budgetTracker){
+async function distanceMatrix(userDataObj){
 
-    const fetchResultMatrix = await fetch(`https://trueway-matrix.p.rapidapi.com/CalculateDrivingMatrix?origins=${budgetTracker.workLat}%2C${budgetTracker.workLng}&destinations=${budgetTracker.aptLat}%2C${budgetTracker.aptLng}`, {
+    //conversion factor = # of meters/mile
+    const meterToMile = 1609.34;
+
+    const fetchResultMatrix = await fetch(`https://trueway-matrix.p.rapidapi.com/CalculateDrivingMatrix?origins=${userDataObj.workLat}%2C${userDataObj.workLng}&destinations=${userDataObj.aptLat}%2C${userDataObj.aptLng}`, {
 	"method": "GET",
 	"headers": {
-		'x-rapidapi-key': '7536dee8b5msh03cc5ee840cda5bp11f4bdjsna6622adb57df',
-        'x-rapidapi-host': 'trueway-matrix.p.rapidapi.com'
-	}
+		"x-rapidapi-key": "1b3e17da97msh8784bd378de9d66p17b153jsn255eb2ee1914",
+		"x-rapidapi-host": "trueway-matrix.p.rapidapi.com"
+	    }
     })
     .then(function(response){
-	    return response.json();
+	return response.json();
     })
     .then(function(data){
         console.log(data);
-
-        //conversion factor = # of meters/mile
-        const meterToMile = 1609.34;
-
         //for one location coordinate pair {lat, lng}, response is in the form of a 2D array ("distances" in meters or "durations" in seconds) with distance value at position [0][0]
-        budgetTracker.commuteDistance = (data.distances[0][0])/ meterToMile + 1;
-        budgetTracker.commuteTime = Math.round((data.durations[0][0])/60) + 1;
-        console.log("The user commute distance(miles) is: " + budgetTracker.commuteDistance);
-        console.log("The user commute time(minutes) is: " + budgetTracker.commuteTime);
-        localStorage.setItem("budgetTracker", JSON.stringify(budgetTracker));
+        let commuteObj = {};
+        commuteObj.commuteDistance = Math.round((data.distances[0][0])/ meterToMile);
+        commuteObj.commuteTime = Math.round((data.durations[0][0])/60);
+        console.log("The user commute distance(miles) is: " + commuteObj.commuteDistance);
+        console.log("The user commute time(minutes) is: " + commuteObj.commuteTime);
 
-        return;
+        //return commuteObj ={commuteDistance: X (miles, to nearest mile), commuteTime: Y (minutes, to nearest minute)}
+        return commuteObj;
     })
     .catch(err => {
-	    console.error(err);
+	console.error(err);
     });
     
     console.log(fetchResultMatrix);
@@ -289,9 +289,11 @@ function gasCostHandler(){
     distanceMatrix(budgetTracker).then(function(data){
         console.log(data);
 
+        data.commuteDistance = budgetTracker.commuteDistance;
+        data.commuteTime = budgetTracker.commuteTime;
+
         budgetTracker.gasCost = ((((budgetTracker.commuteDistance/budgetTracker.mpg) * budgetTracker.averagePrice)*2)*22);
 
-        localStorage.setItem("budgetTracker", JSON.stringify(budgetTracker));
         $("#total-cost").html(`<p>your commute distance between work and home is ${data.commuteDistance } miles, with a estimated travel time of ${Math.round(data.commuteTime/60)} hours and ${Math.round(((data.commuteTime % 60)/60) * 60) } min. the maximum you'll pay for gas is ${parseInt(budgetTracker.gasCost)}$ a month<p>`);
     });
     return;
