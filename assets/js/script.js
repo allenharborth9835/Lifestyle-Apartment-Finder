@@ -281,7 +281,6 @@ function gasCostHandler(){
     distanceMatrix(budgetTracker).then(function(data){
         console.log(data);
 
-        "The user commute distance between work and home is " + data.commuteDistance + " miles" + ", with a estimated travel time of " + Math.round(data.commuteTime/60) + " hr " + Math.round(((data.commuteTime % 60)/60) * 60) + " min";
         budgetTracker.gasCost = ((((budgetTracker.commuteDistance/budgetTracker.mpg) * budgetTracker.averagePrice)*2)*22);
 
         localStorage.setItem("budgetTracker", JSON.stringify(budgetTracker));
