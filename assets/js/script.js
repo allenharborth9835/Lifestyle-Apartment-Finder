@@ -253,7 +253,6 @@ function apartmentHandler(){
     }
     apartmentChoice = $("#apartment-choice").val();
 
-        console.log(budgetTracker.apartmentData[apartmentChoice-1])
         budgetTracker.apartmentAddress = budgetTracker.apartmentData[apartmentChoice-1].address;
         budgetTracker.apartmentAmount = budgetTracker.apartmentData[apartmentChoice-1].price_raw;
         budgetTracker.AptLat = budgetTracker.apartmentData[apartmentChoice-1].lat;
@@ -278,7 +277,17 @@ function gasCostHandler(){
     }
     budgetTracker.mpg = $("#MPG").val();
     budgetTracker.averagePrice = $("#gas-price").val();
-    budgetTracker.gasCost = ((((budgetTracker.radius/budgetTracker.mpg) * budgetTracker.averagePrice)*2)*22);
+
+    distanceMatrix(budgetTracker).then(function(data){
+        console.log(data);
+
+        "The user commute distance between work and home is " + data.commuteDistance + " miles" + ", with a estimated travel time of " + Math.round(data.commuteTime/60) + " hr " + Math.round(((data.commuteTime % 60)/60) * 60) + " min";
+        budgetTracker.gasCost = ((((budgetTracker.commuteDistance/budgetTracker.mpg) * budgetTracker.averagePrice)*2)*22);
+
+        localStorage.setItem("budgetTracker", JSON.stringify(budgetTracker));
+        $("#gas-bill").html(`<p>your commute distance between work and home is ${data.commuteDistance } miles, with a estimated travel time of ${Math.round(data.commuteTime/60)} hours and ${Math.round(((data.commuteTime % 60)/60) * 60) } min. the maximum you'll pay for gas is ${parseInt(budgetTracker.gasCost)}$ a month<p>`);
+        $("#total-cost").html(`<p>the average total price of apartment and gas could be as high as ${parseInt(budgetTracker.apartmentAmount) + parseInt(budgetTracker.gasCost)}$ a month<p>`);
+    });
 
     localStorage.setItem("budgetTracker", JSON.stringify(budgetTracker));
     $("#gas-bill").html(`<p>the maximum you'll pay for gas is ${parseInt(budgetTracker.gasCost)}$ a month<p>`);
