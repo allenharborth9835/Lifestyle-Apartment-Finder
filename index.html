@@ -17,7 +17,7 @@
      <!--Import materialize.css-->
      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
         
-     
+     <link rel="stylesheet" href="./assets/css/style.css">
      <!--Let browser know website is optimized for mobile-->
      <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
    </head>
@@ -54,22 +54,22 @@
             <li>
               <img src="./assets/css/materialize-v1.0.0 (1)/img/Apartment1.jpg">
               <div class="caption center-align">
-                <h3>This is our big Tagline!</h3>
-                <h5 class="light grey-text text-lighten-3">Here's our small slogan.</h5>
+                <h3 class= "darkGrey">Find the perfect apartment for you!</h3>
+                <h5 class="darkGrey text-lighten-3">Search apartments near your job.</h5>
               </div>
             </li>
             <li>
               <img src="./assets/css/materialize-v1.0.0 (1)/img/Apartment2.jpg"> 
               <div class="caption left-align">
-                <h3>Left Aligned Caption</h3>
-                <h5 class="light grey-text text-lighten-3">Here's our small slogan.</h5>
+                <h3 class= "darkGrey">Get accurate commute time!</h3>
+                <h5 class="darkGrey text-lighten-3">using advance methods to get your exact commute times.</h5>
               </div>
             </li>
             <li>
               <img src="./assets/css/materialize-v1.0.0 (1)/img/Apartment3.jpg"> 
               <div class="caption right-align">
-                <h3>Right Aligned Caption</h3>
-                <h5 class="light grey-text text-lighten-3">Here's our small slogan.</h5>
+                <h3 class= "darkGrey">chose from hundreds of apartments</h3>
+                <h5 class="darkGrey text-lighten-3">Giving you nation wide offers on apartments.</h5>
               </div>
             </li>
           </ul>
@@ -79,10 +79,7 @@
    <div class="container">
      <div class="row">
        <div class="col s12">
-         <h3>Apartment Locations</h3>
-         <div class="input-field">
-           <input type="text" class="white grey-text auto" placeholder="Location (Austin, Dallas, etc...)">
-         </div>
+         <h3>Input your work address to get the apartments in your area</h3>
        </div>
      </div>
    </div>
@@ -90,39 +87,151 @@
    <!--input boxes--> 
    <aside>
       <p>
-      <label for="workAd ">Work Address:</label>
-      <input type="text" id="workAd" name="workAd">
-        <button class="btn waves-effect waves-light" type="submit" name="action">Submit
+        <button data-target="modal1" class="modal-trigger btn waves-effect waves-light" name="action">Input your work address
           <i class="material-icons right">send</i>
         </button>
       </p>
+      <div id="modal1" class="modal">
+        <div class="modal-content">
+            <h4>job street address</h4>
+            <input id="job-street-address" size="10" class="browser-default" ></input>
+            <h4>job area code</h4>
+            <input id="job-area-code" size="10" class="browser-default" ></input>
+            <h4>job city</h4>
+            <input id="job-city" size="10" class="browser-default" ></input>
+            <div class="row">
+                <h4>job state</h4>
+                <select id="job-state" selected="20" class = "browser-default">
+                    <option value="AL">AL</option>
+                    <option value="AK">AK</option>
+                    <option value="AZ">AZ</option>
+                    <option value="AR">AR</option>
+                    <option value="CA">CA</option>
+                    <option value="CO">CO</option>
+                    <option value="CT">CT</option>
+                    <option value="DE">DE</option>
+                    <option value="DC">DC</option>
+                    <option value="FL">FL</option>
+                    <option value="GA">GA</option>
+                    <option value="HI">HI</option>
+                    <option value="ID">ID</option>
+                    <option value="IL">IL</option>
+                    <option value="IN">IN</option>
+                    <option value="IA">IA</option>
+                    <option value="KS">KS</option>
+                    <option value="KY">KY</option>
+                    <option value="LA">LA</option>
+                    <option value="ME">ME</option>
+                    <option value="MD">MD</option>
+                    <option value="MA">MA</option>
+                    <option value="MI">MI</option>
+                    <option value="MN">MN</option>
+                    <option value="MS">MS</option>
+                    <option value="MO">MO</option>
+                    <option value="MT">MT</option>
+                    <option value="NE">NE</option>
+                    <option value="NV">NV</option>
+                    <option value="NH">NH</option>
+                    <option value="NJ">NJ</option>
+                    <option value="NM">NM</option>
+                    <option value="NY">NY</option>
+                    <option value="NC">NC</option>
+                    <option value="ND">ND</option>
+                    <option value="OH">OH</option>
+                    <option value="OK">OK</option>
+                    <option value="OR">OR</option>
+                    <option value="PA">PA</option>
+                    <option value="RI">RI</option>
+                    <option value="SC">SC</option>
+                    <option value="SD">SD</option>
+                    <option value="TN">TN</option>
+                    <option value="TX">TX</option>
+                    <option value="UT">UT</option>
+                    <option value="VT">VT</option>
+                    <option value="VA">VA</option>
+                    <option value="WA">WA</option>
+                    <option value="WV">WV</option>
+                    <option value="WI">WI</option>
+                    <option value="WY">WY</option>
+                    <option value="AS">AS(American Somoa)</option>
+                    <option value="GU">GU(Guam)</option>
+                    <option value="MP">MP(Northern Mariana Islands)</option>
+                    <option value="PR">PR(Puerto Rico)</option>
+                    <option value="VI">VI(US Virgin Islands)</option>
+                </select>
+            </div>
+            <div class="row">
+                <h4>radius in miles</h4>
+                <select id="radius" selected="20" class = "browser-default">
+                    <option value="1">1</option>
+                    <option value="5">5</option>
+                    <option value="20">20</option>
+                    <option value="50">50</option>
+                    <option value="100">100</option>
+                </select>
+            </div>
+        </div>
+        <div  class="modal-footer">
+            <a href="#!" class="model-action modal-close waves-effect waves-green btn-flat" 
+                id="work-input-btn">search
+            </a>    
+        </div>
+        </div>
+      <div id="apartment-search">
+
+      </div>
       <p>
-       <label for="Aprt">Apartment cost:</label>
-      <input type="text" id="Aprt" name="Aprt">
-        <button class="btn waves-effect waves-light" type="submit" name="action">Submit
+        <button data-target="modal2" class="modal-trigger btn waves-effect waves-light" name="action">Choose your apartment
         <i class="material-icons right">send</i>
         </button>
       </p>
+      <div id="modal2" class="modal">
+        <div class="modal-content">
+            <h4>pick an apartment from the list using its number</h4>
+            <input id="apartment-choice" size="10"></input>
+        </div>
+        <div  class="modal-footer">
+            <a href="#!" class="model-action modal-close waves-effect waves-green btn-flat"
+                id="apartment-input-btn">input
+            </a>
+        </div>
+      </div>
+      <div id="apartment-pick">
+
+      </div>
       <p>
-       <label for="Gas">Gas Price:</label>
-       <input type="text" id="Gas" name="Gas">
-         <button class="btn waves-effect waves-light" type="submit" name="action">Submit
+         <button data-target="modal3" class="modal-trigger btn waves-effect waves-light" name="action">Add your cars information
         <i class="material-icons right">send</i>
          </button>
       </p>
-     </main> 
-   </aside>
-      <!--JavaScript at end of body for optimized loading-->
-     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
-     
-     <script>
-     // Sidenav
-    
-     // Slider
-     $(document).ready(function(){
-      $('.slider').slider({full_width: true});
-    });
-    
-     </script>
+      <div id="modal3" class="modal">
+        <div class="modal-content">
+            <h4>MPG</h4>
+            <input id="MPG" size="10"></input>
+            <h4>Gas Prices</h4>
+            <input id="gas-price" size="10"></input>
+        </div>
+        <div  class="modal-footer">
+            <a href="#!" class="model-action modal-close waves-effect waves-green btn-flat"
+                id="gas-input-btn">input
+            </a>
+        </div>
+      </div>
+      <div id="gas-bill">
+
+      </div>
+      <div id="total-cost">
+      </div>
+      
+    </div>
+     <div id="apartment-listings">
+
+    </div>
+    </aside>   
+   
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
+   <script src="assets/js/script.js"></script>
  </body>
 </html>

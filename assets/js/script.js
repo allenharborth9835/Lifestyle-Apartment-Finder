@@ -64,6 +64,10 @@ let budgetTracker = {
 $(document).ready(function () {
     $('.modal').modal();
 });
+$(document).ready(function(){
+    $('.slider').slider({full_width: true});
+});
+
 
 //convert an address srting to a fetch query parameter for geoCode()
 function addressToFetchQueryParam(addressString){
@@ -221,6 +225,7 @@ function workHandler(){
         var divEl = document.querySelector("#apartment-listings");
         var orderedListEL = document.createElement("ul");
         divEl.appendChild(orderedListEL);
+        $("#apartment-listings").append("<h2>Apartments near you</h2>")
         for(let i = 0; i < data.length; i++ ){
             var orderedListItem = document.createElement("li");
             if(data[i].photo_count > 0){
