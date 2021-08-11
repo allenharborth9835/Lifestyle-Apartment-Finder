@@ -49,21 +49,30 @@
     </nav>
          
          <!--Slide show -->
-         <div class="carousel carousel-slider center">
-          <div class="carousel-fixed-item center">
-          </div>
-          <div class="carousel-item white-text" href="#one!"><img src="assets/css/materialize-v1.0.0 (1)/img/Apartment1.jpg">
-            <h2>First Panel</h2>
-            <p class="white-text">This is your first panel</p>
-          </div>
-          <div class="carousel-item white-text" href="#two!"><img src="assets/css/materialize-v1.0.0 (1)/img/Apartment2.jpg">
-            <h2>Second Panel</h2>
-            <p class="white-text">This is your second panel</p>
-          </div>
-          <div class="carousel-item white-text" href="#three!"><img src="assets/css/materialize-v1.0.0 (1)/img/Apartment3.jpg">
-            <h2>Third Panel</h2>
-            <p class="white-text">This is your third panel</p>
-          </div>
+         <div class="slider">
+          <ul class="slides">
+            <li>
+              <img src="./assets/css/materialize-v1.0.0 (1)/img/Apartment1.jpg">
+              <div class="caption center-align">
+                <h3>This is our big Tagline!</h3>
+                <h5 class="light grey-text text-lighten-3">Here's our small slogan.</h5>
+              </div>
+            </li>
+            <li>
+              <img src="./assets/css/materialize-v1.0.0 (1)/img/Apartment2.jpg"> 
+              <div class="caption left-align">
+                <h3>Left Aligned Caption</h3>
+                <h5 class="light grey-text text-lighten-3">Here's our small slogan.</h5>
+              </div>
+            </li>
+            <li>
+              <img src="./assets/css/materialize-v1.0.0 (1)/img/Apartment3.jpg"> 
+              <div class="caption right-align">
+                <h3>Right Aligned Caption</h3>
+                <h5 class="light grey-text text-lighten-3">Here's our small slogan.</h5>
+              </div>
+            </li>
+          </ul>
         </div>
    <!--Search bar-->
    <section id="search" class="section section-search blue lighten-2 white-text center scrollspy"></section>
@@ -109,14 +118,11 @@
      <script>
      // Sidenav
     
-
      // Slider
-     $('.carousel.carousel-slider').carousel({
-    fullWidth: true,
-    indicators: true
-  });
-
-        
+     $(document).ready(function(){
+      $('.slider').slider({full_width: true});
+    });
+    
      </script>
  </body>
 </html>
