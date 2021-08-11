@@ -225,17 +225,16 @@ function workHandler(){
         var divEl = document.querySelector("#apartment-listings");
         var orderedListEL = document.createElement("ul");
         divEl.appendChild(orderedListEL);
-        $("#apartment-listings").append("<h2>Apartments near you</h2>")
         for(let i = 0; i < data.length; i++ ){
             var orderedListItem = document.createElement("li");
             if(data[i].photo_count > 0){
-                orderedListItem.innerHTML = "<p>" + (i+1)+". " + data[i].address + "<p>" + "<p>" + data[i].lat + "/" + data[i].lon + "<p>" + "<img src='" 
+                orderedListItem.innerHTML = "<h2>" + (i+1)+". " + data[i].address + "</h2>"+"<img src='" 
                 + data[i].photo + "'style='width:autopx;height:autopx;' width='900' height='600'>" + "<p>" + data[i].sqft + ", Beds: " + data[i].beds + ", Baths: " + data[i].baths 
-                + " Monthly Rent:" + data[i].price + "," + data[i].price_raw + "<p>";
+                + " Monthly Rent:" + data[i].price +"</p>";
             } else{
-                orderedListItem.innerHTML = "<p>" + data[i].address + data[i].lat + "/" + data[i].lon + "<p>" + "<img src='" 
+                orderedListItem.innerHTML = "<h2>" + data[i].address + "</h2>" + "<img src='" 
                 + "<p>No Photo to Display<p>" + "'>" + "<p>" +  data[i].sqft + ", Beds: " + data[i].beds + ", Baths: " + data[i].baths 
-                + " Monthly Rent:" + data[i].price + "," + data[i].price_raw + "<p>";
+                + " Monthly Rent:" + data[i].price +"</p>";
             }
             orderedListEL.appendChild(orderedListItem);
         }
