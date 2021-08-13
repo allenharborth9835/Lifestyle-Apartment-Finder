@@ -198,13 +198,15 @@ async function searchListings(budgetTracker){
     return fetchResultList;
 }
 
-
 //function that handles work address input
 function workHandler(){
     $("#apartment-search").append('');
-    if($("#job-street-address").val() === ""||$("#job-city").val()==""){
-        alert("must put in work address");
-        return;
+    if($("#job-street-address").val() === ""||
+        $("#job-city").val()==""||
+        $("#job-area-code").val()==""||
+        $("#job-state").val()==""){
+            $("#address-error-message").html("must put in work address");
+            return;
     }
     budgetTracker.workStreetAddress = $("#job-street-address").val();
     budgetTracker.workAreaCode = $("#job-area-code").val();
@@ -246,17 +248,18 @@ function workHandler(){
         $("#gas-bill").html(`<p>the maximum you'll pay for gas is ${parseInt(budgetTracker.gasCost)}$ a month<p>`);
         $("#total-cost").html(`<p>the average total price of apartment and gas could be as high as ${parseInt(budgetTracker.apartmentAmount) + parseInt(budgetTracker.gasCost)}$ a month<p>`);
     }
+    $("#address-error-message").html("");
     return;
 }
 
 //function that handles apartment input
 function apartmentHandler(){
     if($("#apartment-choice").val() === ""){
-        alert("apartment needs to be chosen from the list of choices");
+        $("#apartment-error-message").html("apartment must to be chosen from the list of choices");
         return;
     }
     if(isNaN($("#apartment-choice").val())){
-        alert("apartment choice must be a number");
+        $("#apartment-error-message").html("apartment choice must be a number");
         return;
     }
     apartmentChoice = $("#apartment-choice").val();
@@ -271,30 +274,29 @@ function apartmentHandler(){
     if(!(budgetTracker.mpg===null)){
         $("#total-cost").html(`<p>the average total price of apartment and gas could be as high as ${parseInt(budgetTracker.apartmentAmount) + parseInt(budgetTracker.gasCost)}$ a month<p>`);
     }
+    $("#apartment-error-message").html("");
     return;
 }
 //funtion that handles gas bill input
 function gasCostHandler(){
     if($("#MPG").val() === ""||$("#gas-price").val() === ""){
-        alert("must put in MPG and gas-price");
+        $("#gas-error-message").html("must put in MPG and gas-price");
         return;
     }
     if(isNaN($("#MPG").val()) || isNaN($("#gas-price").val())){
-        alert("MPG and gas-price have to be numbers");
+        $("#gas-error-message").html("MPG and gas-price have to be numbers");
         return;
     }
     budgetTracker.mpg = Number($("#MPG").val());
     budgetTracker.averagePrice = Number($("#gas-price").val());
 
     distanceMatrix(budgetTracker).then(function(){
-
         budgetTracker.gasCost = (((budgetTracker.commuteDistance/budgetTracker.mpg) * budgetTracker.averagePrice)*2*22);
-
         console.log(budgetTracker);
-
         localStorage.setItem("budgetTracker", JSON.stringify(budgetTracker));
         $("#total-cost").html(`<p>your commute distance between work and home is ${budgetTracker.commuteDistance } miles, with a estimated travel time of ${Math.round(budgetTracker.commuteTime/60)} hours and ${Math.round(((budgetTracker.commuteTime % 60)/60) * 60) } min. the maximum you'll pay for gas is ${parseInt(budgetTracker.gasCost)}$ a month<p>`);
     });
+    $("#gas-error-message").html("")
 }
 
 
