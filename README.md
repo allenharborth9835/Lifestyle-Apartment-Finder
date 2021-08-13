@@ -7,10 +7,10 @@
 
 ## Credits
 
-Jacob Frazer\(Github:[coderjake91](github.com/coderjake91)\)-Javascript(framework-logic)
-Allen Harborth\(Github:[allenharborth9835](github.com/allenharborth9835)\)-Javascript(API-logic)
-Langdon Echols\(Github:[LangdonEcho](github.com/LangdonEcho)\)-HTML/CSS
-William Stotts\(Github:[Dankkilla13](github.com/Dankkilla13)\)-HTML/CSS
+Jacob Frazer\(Github:[coderjake91](github.com/coderjake91)\)-Javascript(framework-logic)  
+Allen Harborth\(Github:[allenharborth9835](github.com/allenharborth9835)\)-Javascript(API-logic)  
+Langdon Echols\(Github:[LangdonEcho](github.com/LangdonEcho)\)-HTML/CSS  
+William Stotts\(Github:[Dankkilla13](github.com/Dankkilla13)\)-HTML/CSS  
 
 ## screenshot
 ![App Screenshot](./assets/images/LifeStyleApartmentFinder.JPG)
