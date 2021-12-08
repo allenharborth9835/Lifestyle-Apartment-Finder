@@ -41,4 +41,4 @@ William Stotts\(Github:[Dankkilla13](github.com/Dankkilla13)\)-HTML/CSS
 ![App Screenshot](./assets/images/LifeStyleApartmentFinder.JPG)
 ## documentation
 [GitHub Repo](https://github.com/allenharborth9835/team-project-1)
-[Live Page on Github](https://allenharborth9835.github.io/team-project-1/)
+[Live Page on Github](https://allenharborth9835.github.io/Lifestyle-Apartment-Finder/)
