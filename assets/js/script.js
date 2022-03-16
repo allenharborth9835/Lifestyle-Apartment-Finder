@@ -31,20 +31,6 @@ const userData = {
     commuteRadius: 20
 }
 
-//convert an address srting to a fetch query parameter for geoCode()
-function addressToFetchQueryParam(addressString){
-    // use String.prototype.replace() method
-
-    //note that there is a need for address input validation, and that can be handled here or in the [framework-logic]
-
-    const newaddressString1 = addressString.replace(/,/g,'%2C');
-
-    const newaddressString2 = newaddressString1.replace(/\s/g,'%20');
-
-    return newaddressString2;
-
-}
-
 //distance matrix function that accepts two sets of coordinates {latitude, longitude}, then utilizes TrueWay Matrix API to compute distances (in meters) and travel duration times between those two locations (assuming user is driving a car)
 async function distanceMatrix(userDataObj){
 
@@ -80,8 +66,8 @@ async function distanceMatrix(userDataObj){
 //function that accepts an address string, then uses the TrueWay Geocoding API to convert the address string into map coordinates {latitude, longitude}
 async function geoCode(addressToConvert){
   
-    //place a function here to parse address string and convert it to query format
-    convertedQueryParamAddress = addressToFetchQueryParam(addressToConvert);
+    //place a function here to parse address string and URL encode it (source: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/encodeURIComponent)
+    convertedQueryParamAddress = encodeURIComponent(addressToConvert);
     
     const fetchResultGeo = await fetch(`https://trueway-geocoding.p.rapidapi.com/Geocode?address=${convertedQueryParamAddress}&language=en`, {
 	"method": "GET",
@@ -109,8 +95,8 @@ async function geoCode(addressToConvert){
 //function that accepts an area code, state, city, search radius, and number of desired listings to return from Reality in us API
 async function searchListings(userDataObj){
 
-    //convert city name into a fetch query string
-    queryStringCityName = addressToFetchQueryParam(userDataObj.workCity);
+    //place a function here to parse address string and URL encode it (source: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/encodeURIComponent)
+    queryStringCityName = encodeURIComponent(userDataObj.workCity);
 
     const searchResponseLimit = 200;
     
