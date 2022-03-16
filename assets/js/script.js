@@ -1,42 +1,3 @@
-/*--------------------------------------------[api-logic] Pseudocode/input and output/functional structure------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-
-    [framework-logic] will collect and validate user input values relavent to the API code logic [api-logic] presented below...
-
-    Expected input from framework-logic:
-    1) user work address-> datatype = string
-    2) user's radial distance of choice from work address postal code -> datatype = integer
-    3) user apartment choice -> datatype = integer(s)- location coordinates of apartment choice (once listings populate for user in the framework-logic)
-
-    Expected output from API-logic:
-    1) apartment listings with relevant parameters for each listing (i.e. address, price, locational coordinates)
-    2) travel distance (driving) between user work address and user chosen apartment address (can also output travel times as an added future feature)
-    3) "map tile" using apartment and work locational coordinates
-    4) (optional) could add gas price API here and output gas bill, if needed to handle this functionality in the API schema
-
-    Functions/arguments:
-    1) distanceMatrix(startCoordinateLat, startCoordinateLng, endCoordinateLat, endCoordinateLng)
-    2) geoCode(addressToConvert)
-    3) searchListings(areaCode, stateCode, city, searchRadius)
-    4) addressToFetchQueryParam()
-
-    API(s):
-    1) TrueWay Matrix API
-    2) TrueWay Geocoding API (geocoding)
-    3) Reality in US API (apartment listings)
-
-    Pseudocode/use statement:
-    1) In [framework-logic], prompt user for work address + desired radius (in miles) for apartment listing search (retrieve address string + radius integer)
-    2) In [framework-logic], parse user work address string to caputure work address area code, state, city
-    3) In [framework-logic], call searchListings() in [api-logic] using parsed string result (area code, state, and city) + searchRadius (from user) as arguments-> searchListings() returns apartmentListings object (contains array of listings objects)
-    4) In [framework-logic], traverse apartmentListings object to display listings (with pricing) to user in web app, have user choose listing, return location coordinates (parameters available in listings object)
-    5) In [framework-logic], call calcCommute() in [api-logic]- passing chosen apartment location coordinates (step 4) + user work address as a string
-    6) In [api-logic], calcCommute returns a 2 dimensional array of distance and commute time data (in meters and seconds-see API-mapping.md for more info) for use in either [framework logic] or in [api-logic] where a function can be called to calulate the users estimate gas bill (calcGasBill())
-    7) In [api-logic], figure out a way to display work address and chosen appartment address using a map "tile" using OpenLayers map library (At least for MVP, can be updated with other mapping features later)
-
-    Use Statement:
-    [api-logic] is designed to be modular and adaptive to the needs of the web app [framework-logic], therefore list functions can be used individually as needed, and can be readily modified as needed
---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
-
 /*-------------Test Data--------------------------------------------------------------------------------*/
 //example location coordinate pairs:
 //target work location coordinate pair: 40.74334317912754, -74.00767199382838
@@ -52,7 +13,6 @@
 // %20 = space
 // %2C = ","
 /*------------------------------------------------------------------------------------------------------*/
-
 
 //Test user data object (work latitude/longitude; area code; city; state; address string, chosen apartment latitude/longitude, user provided commute radius, calculated commute distance/time)
 const userData = {
@@ -179,61 +139,4 @@ async function searchListings(userDataObj){
 
     return fetchResultList;
 }
-
-/*----------------Uncommment to Test APIs------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
-// async distanceMatrix(() example
-
-/*
-distanceMatrix(userData).then(function(data){
-    var divEl = document.querySelector("#target");
-    var newParahEl = document.createElement("p");
-    newParahEl.innerHTML = "The user commute distance between work and home is " + data.commuteDistance + " miles" + ", with a estimated travel time of " + Math.round(data.commuteTime/60) + " hr " + Math.round(((data.commuteTime % 60)/60) * 60) + " min";
-    divEl.appendChild(newParahEl);
-});
-*/
-
-//async geoCode() example
-
-/*
-geoCode(userData.aptAddress).then(function(data){
-    var divEl = document.querySelector("#target");
-    var newParahEl = document.createElement("p");
-    newParahEl.innerHTML = "The apartment address (" + userData.aptAddress + ")"+ " latitude/longitude pair is: " + data.lat + "/" + data.lng;
-    divEl.appendChild(newParahEl);
-});
-*/
-
-// async searchListings() example:
-
-/*
-searchListings(userData).then(function(data){
-    var divEl = document.querySelector("#target");
-    var orderedListEL = document.createElement("ol");
-    divEl.appendChild(orderedListEL);
-
-    for(let i = 0; i < data.length; i++ ){
-        var orderedListItem = document.createElement("li");
-        if(data[i].photo_count > 0){
-            orderedListItem.innerHTML = "<h1>" + data[i].address + "<h1><br>" + "<h2>" + data[i].lat + "/" + data[i].lon + "<h2><br>" + "<img src='" 
-            + data[i].photo + "'style='width:autopx;height:autopx;'>" + "<h3>" + data[i].sqft + ", Beds: " + data[i].beds + ", Baths: " + data[i].baths 
-            + " Monthly Rent:" + data[i].price + "," + data[i].price_raw + "<h3><br>";
-        } else{
-            orderedListItem.innerHTML = "<h1>" + data[i].address + data[i].lat + "/" + data[i].lon + "<h1><br>" + "<img src='" 
-            + "<h2>No Photo to Display<h2>" + "'>" + "<h3>" +  data[i].sqft + ", Beds: " + data[i].beds + ", Baths: " + data[i].baths 
-            + " Monthly Rent:" + data[i].price + "," + data[i].price_raw + "<h3><br>";
-        }
-        orderedListEL.appendChild(orderedListItem);
-    }
-});
-*/
-
-// convert address string to fetch query string example:
-
-//addressToFetchQueryParam(addressExample);
-
-/*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
-
-
-
-
 
