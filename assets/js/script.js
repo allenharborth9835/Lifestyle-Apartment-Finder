@@ -77,15 +77,9 @@ function addressToFetchQueryParam(addressString){
 
     //note that there is a need for address input validation, and that can be handled here or in the [framework-logic]
 
-    console.log(addressString);
-
     const newaddressString1 = addressString.replace(/,/g,'%2C');
 
-    console.log(newaddressString1);
-
     const newaddressString2 = newaddressString1.replace(/\s/g,'%20');
-
-    console.log(newaddressString2);
 
     return newaddressString2;
 
@@ -108,13 +102,10 @@ async function distanceMatrix(userDataObj){
 	return response.json();
     })
     .then(function(data){
-        console.log(data);
         //for one location coordinate pair {lat, lng}, response is in the form of a 2D array ("distances" in meters or "durations" in seconds) with distance value at position [0][0]
         let commuteObj = {};
         commuteObj.commuteDistance = Math.round((data.distances[0][0])/ meterToMile);
         commuteObj.commuteTime = Math.round((data.durations[0][0])/60);
-        console.log("The user commute distance(miles) is: " + commuteObj.commuteDistance);
-        console.log("The user commute time(minutes) is: " + commuteObj.commuteTime);
 
         //return commuteObj ={commuteDistance: X (miles, to nearest mile), commuteTime: Y (minutes, to nearest minute)}
         return commuteObj;
@@ -122,8 +113,7 @@ async function distanceMatrix(userDataObj){
     .catch(err => {
 	console.error(err);
     });
-    
-    console.log(fetchResultMatrix);
+
     return fetchResultMatrix;
 }
 
@@ -144,9 +134,6 @@ async function geoCode(addressToConvert){
 	return response.json();
     })
     .then(function(data){
-    console.log(data);
-    //isolate location coordinates as an object
-    console.log(data.results[0].location);
 
     //return location coordinates as an object
     return data.results[0].location;
@@ -155,7 +142,6 @@ async function geoCode(addressToConvert){
     console.error(err);
      });
 
-    console.log(fetchResultGeo);
     return fetchResultGeo;
 
 }
@@ -163,12 +149,8 @@ async function geoCode(addressToConvert){
 //function that accepts an area code, state, city, search radius, and number of desired listings to return from Reality in us API
 async function searchListings(userDataObj){
 
-    console.log(userDataObj.workCity);
-
     //convert city name into a fetch query string
     queryStringCityName = addressToFetchQueryParam(userDataObj.workCity);
-
-    console.log(queryStringCityName);
 
     const searchResponseLimit = 200;
     
@@ -184,18 +166,10 @@ async function searchListings(userDataObj){
 	return response.json();
     })
     .then(function(data){
-    console.log(data);
 
     let listingsArray = data.listings
 
     //return the array of rental listings
-    for(let i = 0; i < listingsArray.length; i++){
-        if(listingsArray[i].price_raw === 0){
-            console.log("Listing #: " + (i+1) + " requires " + "Phone " + listingsArray[i].price + " for price quote");
-        }
-    }
-
-    console.log("We have returned " +data.listings.length + " potential listings according to the requested search parameters");
     return listingsArray;
     
     })
@@ -203,7 +177,6 @@ async function searchListings(userDataObj){
 	console.error(err);
     });
 
-    console.log(fetchResultList);
     return fetchResultList;
 }
 
@@ -212,7 +185,6 @@ async function searchListings(userDataObj){
 
 /*
 distanceMatrix(userData).then(function(data){
-    console.log(data);
     var divEl = document.querySelector("#target");
     var newParahEl = document.createElement("p");
     newParahEl.innerHTML = "The user commute distance between work and home is " + data.commuteDistance + " miles" + ", with a estimated travel time of " + Math.round(data.commuteTime/60) + " hr " + Math.round(((data.commuteTime % 60)/60) * 60) + " min";
@@ -224,7 +196,6 @@ distanceMatrix(userData).then(function(data){
 
 /*
 geoCode(userData.aptAddress).then(function(data){
-    console.log(data);
     var divEl = document.querySelector("#target");
     var newParahEl = document.createElement("p");
     newParahEl.innerHTML = "The apartment address (" + userData.aptAddress + ")"+ " latitude/longitude pair is: " + data.lat + "/" + data.lng;
@@ -236,7 +207,6 @@ geoCode(userData.aptAddress).then(function(data){
 
 /*
 searchListings(userData).then(function(data){
-    console.log(data);
     var divEl = document.querySelector("#target");
     var orderedListEL = document.createElement("ol");
     divEl.appendChild(orderedListEL);
