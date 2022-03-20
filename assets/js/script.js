@@ -33,7 +33,7 @@ let distanceMatrix = async function(origin, destination){
 }
 
 //function that accepts an address string, then uses the TrueWay Geocoding API to convert the address string into map coordinates {latitude, longitude}
-async function geoCode(addressToConvert){
+let geoCode = async function(addressToConvert){
   
     //place a function here to parse address string and URL encode it (source: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/encodeURIComponent)
     convertedQueryParamAddress = encodeURIComponent(addressToConvert);
@@ -61,13 +61,13 @@ async function geoCode(addressToConvert){
 }
 
 //function that accepts an area code, state, city, search radius, and number of desired listings to return from Reality in US API
-async function searchListings(userDataObj){
+let searchListings = async function(areaCode, state, city, searchRadius, listingNumber){
 
     //place a function here to parse address string and URL encode it (source: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/encodeURIComponent)
-    queryStringCityName = encodeURIComponent(userDataObj.workCity);
+    queryStringCityName = encodeURIComponent(city);
     
     //note that we only have 500 API calls per month with this API (hard limit)
-    const fetchResultList = await fetch(`https://realty-in-us.p.rapidapi.com/properties/list-for-rent?state_code=${userDataObj.workState}&city=${queryStringCityName}&limit=${userDataObj.responseLimit}&offset=0&postal_code=${userDataObj.workAreaCode}&sort=relevance&radius=${userDataObj.commuteRadius}`, {
+    const fetchResultList = await fetch(`https://realty-in-us.p.rapidapi.com/properties/list-for-rent?state_code=${state}&city=${queryStringCityName}&limit=${listingNumber}&offset=0&postal_code=${areaCode}&sort=relevance&radius=${searchRadius}`, {
 	"method": "GET",
 	"headers": {
 		"x-rapidapi-key": "1b3e17da97msh8784bd378de9d66p17b153jsn255eb2ee1914",
@@ -92,4 +92,8 @@ async function searchListings(userDataObj){
     return fetchResultList;
 }
 
-module.exports = distanceMatrix
+module.exports = {
+    distanceMatrix,
+    geoCode,
+    searchListings
+}
