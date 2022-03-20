@@ -1,0 +1,23 @@
+{
+  "name": "team-project-1",
+  "version": "1.0.0",
+  "description": "api-logic for apartment locator app",
+  "main": "script.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "module",
+    "url": "git+https://github.com/allenharborth9835/Lifestyle-Apartment-Finder.git"
+  },
+  "author": "coderjake91",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/allenharborth9835/Lifestyle-Apartment-Finder/issues"
+  },
+  "homepage": "https://github.com/allenharborth9835/Lifestyle-Apartment-Finder#readme",
+  "dependencies": {
+    "jest": "^27.5.1",
+    "node-fetch": "^2.6.7"
+  }
+}

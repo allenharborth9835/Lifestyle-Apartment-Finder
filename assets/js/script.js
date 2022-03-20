@@ -1,5 +1,7 @@
+const fetch = require('node-fetch');
+
 //distance matrix function that accepts two sets of coordinates {latitude, longitude}, then utilizes TrueWay Matrix API to compute distances (in meters) and travel duration times between those two locations (assuming user is driving a car)
-async function distanceMatrix(origin, destination){
+let distanceMatrix = async function(origin, destination){
 
     //conversion factor = # of meters/mile
     const meterToMile = 1609.34;
@@ -90,3 +92,4 @@ async function searchListings(userDataObj){
     return fetchResultList;
 }
 
+module.exports = distanceMatrix
